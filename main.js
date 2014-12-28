@@ -1,5 +1,6 @@
-// Declare a global variable that will hold the array of cell IDs for scores and their corresponding
-// row numbers.  The par row is number 0, player 1 row is 1, etc.
+// Declare a global variable that will hold the array of cell IDs for scores
+// and their corresponding row numbers.  The par row is number 0, player 1 row
+// is 1, etc.
 var scoreIDrows = [];
 
 function addScoreIDandRow(cellid, rownum) {
@@ -184,7 +185,8 @@ function initAll() {
 
 function enterHoleScore(holeID) {
     // holeID should be the ID of the control into which the score would be entered.
-    $( "#score_entry_dialog" ).data( "target_id", holeID ); // Save the control ID to set the final value.
+    $( "#score_entry_dialog" ).data( "target_id", holeID ); // Save the control
+        // ID to set the final value.
     // First set the initial value of the score box to be the current score value.
     var v = $( "#" + holeID ).text();
     $( "#score_box_entry" ).val(v);
@@ -307,7 +309,8 @@ document.getElementById('score_box_entry').onkeypress = keypressHandler;
 document.getElementById('score_box_entry').onkeyup = keyupHandler;
 document.getElementById('score_box_entry').onkeydown = keydownHandler;
 
-// Note:  The keyboard event handlers below return false when the default handler should not be called.
+// Note:  The keyboard event handlers below return false when the default
+//        handler should not be called.
 //
 // From http://permadi.com/tutorial/jsEventBubbling/index.html:
 //      By assigning an event handler like above, our handler will be called before the
@@ -317,7 +320,7 @@ document.getElementById('score_box_entry').onkeydown = keydownHandler;
 //
 //      Returning false tells the default event handler to be skipped. Returning true tells
 //      the event-chain to continue (meaning the default event handler will be called). If
-//      no return value is specified, true is assumed. 
+//      no return value is specified, true is assumed.
 
 function keydownHandler(e) {
     // For now, let the default handler do its stuff, except for the BACKSPACE key because
