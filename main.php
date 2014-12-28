@@ -20,8 +20,6 @@ function fetchDate() {
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="jquery-ui.min.css">
     <link rel=stylesheet" href="main.css" />
-    <script src="jquery-2.1.1.min.js"></script>
-    <script src="jquery-ui.min.js"></script>
 </head>
 <body onload="javascript:initAll();">
     <form method="post" id="gscard" name="gscard">
@@ -188,6 +186,8 @@ function fetchDate() {
 
 <br/>
 <p class="copyright">Copyright &copy; 2014 Jim Kottas.  All rights reserved.</p>
+<script src="jquery-2.1.1.min.js"></script>
+<script src="jquery-ui.min.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
