@@ -18,9 +18,9 @@ function fetchDate() {
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="jquery-ui-1.11.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="jquery-ui.min.css">
     <script src="jquery-2.1.1.min.js"></script>
-    <script src="jquery-ui-1.11.1/jquery-ui.min.js"></script>
+    <script src="jquery-ui.min.js"></script>
 </head>
 <body onload="javascript:initAll();">
     <script type="text/javascript"><!--
