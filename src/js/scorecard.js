@@ -99,9 +99,9 @@ function recalculateCell() {
         sum += Number(value);
     }
     var newText = sum.toString()
+        + Array(numPlusses + 1).join("+")
         + Array(numStars + 1).join("*")
-        + Array(numHashes + 1).join("#")
-        + Array(numPlusses + 1).join("+");
+        + Array(numHashes + 1).join("#");
     $( "#" + idOutput ).text(newText);
     return true;
 }
