@@ -1,3 +1,13 @@
+/*!
+ * scorecard.css
+ *
+ * Defines the styles used in the Golf Scorecard web site.
+ *
+ * Copyright (c) 2014 Jim and Joel Kottas.  All rights reserved.
+ * Date: 2014-12-28
+ */
+
+/* Main scorecard view */
 table.scorecard {
     border: 2px solid black;
 }
@@ -60,6 +70,7 @@ textarea {
 }
 p.copyright {
     font-size: smaller;
+    font-style: italic;
 }
 span.program_name {
     font-size: x-large;
@@ -74,6 +85,7 @@ span.program_version {
     border: none;
 }
 
+/* Score entry view */
 table.score_entry {
 }
 td.score_entry {

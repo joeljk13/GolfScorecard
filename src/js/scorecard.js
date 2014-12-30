@@ -1,7 +1,19 @@
-// Declare a global variable that will hold the array of cell IDs for scores
-// and their corresponding row numbers.  The par row is number 0, player 1 row
-// is 1, etc.
+/*!
+ * scorecard.js
+ * JavaScript library for the GolfScorecard web site.
+ * Uses jQuery.
+ *
+ * Copyright (c) 2014 Jim & Joel Kottas.  All rights reserved.
+ * Date: 2014-12-28
+ */
+
+// Declare a global variable that will hold the array of cell IDs for scores and their corresponding
+// row numbers.  The par row is number 0, player 1 row is 1, etc.
 var scoreIDrows = [];
+
+// The default number of players to expect.  This value could grow dynamically in the future.
+var defNumPlayers = 0;
+
 
 function addScoreIDandRow(cellid, rownum) {
     scoreIDrows.push([cellid, rownum]);
@@ -76,15 +88,20 @@ function recalculateCell() {
     var sum = 0;            // The sum of the numeric values in all cells.
     var numStars = 0;       // # of "*" characters in all cells.
     var numHashes = 0;      // # of "#" characters in all cells.
-    var re = /[*# ]+/g;     // Regex to remove stars, hashes, and whitespace from the cell value.
+    var numPlusses = 0;      // # of "+" characters in all cells.
+    var re = /[*#+ ]+/g;     // Regex to remove stars, hashes, and whitespace from the cell value.
     for (var i = 1; i < arguments.length; i++) {
         var cellText = $( "#" + arguments[i] ).text();
         numStars += countCharInString(cellText, '*');
         numHashes += countCharInString(cellText, '#');
+        numPlusses += countCharInString(cellText, '+');
         var value = cellText.replace(re, '');
         sum += Number(value);
     }
-    var newText = sum.toString() + Array(numStars + 1).join("*") + Array(numHashes + 1).join("#");
+    var newText = sum.toString()
+        + Array(numStars + 1).join("*")
+        + Array(numHashes + 1).join("#")
+        + Array(numPlusses + 1).join("+");
     $( "#" + idOutput ).text(newText);
     return true;
 }
@@ -92,13 +109,13 @@ function recalculateCell() {
 function getNumPlayers() {
     // Returns the total number of players in the main display, including ones that
     // have no data for them.
-    var numPlayers = <?php echo NUM_PLAYERS; ?>;
+    var localNumPlayers = defNumPlayers;
     var internalNumPlayers = Number($( "#num_players" ).val());
-    if (internalNumPlayers > numPlayers) {
+    if (internalNumPlayers > localNumPlayers) {
         // Allows for future growth when the number of players can be dynamically increased.
-        numPlayers = internalNumPlayers;
+        localNumPlayers = internalNumPlayers;
     }
-    return numPlayers;
+    return localNumPlayers;
 }
 
 function recalculateRow(rownum) {
@@ -156,7 +173,9 @@ function newScorecardID() {
     if (MMM < 10) { MMM = "00" + MMM; }
     else if (MMM < 100) { MMM = "0" + MMM; }
     var randValue = randomIntFromInterval(100000, 999999);
-    var newID = yyyy + mm + dd + "_" + HH + MM + SS + MMM + "_" + randValue;
+    var newID = yyyy.toString() + mm.toString() + dd.toString()
+        + "_" + HH.toString() + MM.toString() + SS.toString() + MMM.toString()
+        + "_" + randValue.toString();
     $( "#scorecard_id" ).val(newID);
     $( "#main_date" ).val(fetchDate());
     return true;
@@ -167,11 +186,15 @@ function fetchDate() {
     return (1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear();
 }
 
-function initAll() {
+function initAll(num_players) {
     // After the page has been loaded, run these javascript commands to make
     // sure the GUI state is consistent.
-    // First initialize the array of all cell IDs that can contain scores.
-    for (var p = 0; p <= <?php echo NUM_PLAYERS; ?>; p++) {
+
+    // Save the number of players as the default number of players to expect.
+    defNumPlayers = num_players;
+
+    // Initialize the array of all cell IDs that can contain scores.
+    for (var p = 0; p <= num_players; p++) {
         var pid = "p" + ((p == 0) ? "ar" : String(p));
         for (var h = 1; h <= 18; h++) {
             var hid = pid + "h" + String(h);
@@ -197,11 +220,13 @@ function enterHoleScore(holeID) {
         // This is the par row, so don't allow * and #.
         $( "#valuestar" ).hide();
         $( "#valuehash" ).hide();
+        $( "#valueplus" ).hide();
         $( "#score_instructions_row" ).hide();
     } else {
         // Otherwise, it is a player row, so enable them.
         $( "#valuestar" ).show();
         $( "#valuehash" ).show();
+        $( "#valueplus" ).show();
         $( "#score_instructions_row" ).show();
     }
     // Make sure the score area has the focus so that keyboard input is possible.
@@ -305,12 +330,10 @@ function moveCursorToEnd(el) {
     return false;
 }
 
-document.getElementById('score_box_entry').onkeypress = keypressHandler;
-document.getElementById('score_box_entry').onkeyup = keyupHandler;
-document.getElementById('score_box_entry').onkeydown = keydownHandler;
 
-// Note:  The keyboard event handlers below return false when the default
-//        handler should not be called.
+// The JavaScript functions below are for the jQuery UI for entering in a score value via the dialog box.
+//
+// Note:  The keyboard event handlers below return false when the default handler should not be called.
 //
 // From http://permadi.com/tutorial/jsEventBubbling/index.html:
 //      By assigning an event handler like above, our handler will be called before the
@@ -449,18 +472,13 @@ function keypressHandler(e) {
                 scoreEntryAppend(charPressed);
             }
             return false;
+        case '+':
+            if ($( "#valueplus" ).is(':visible')) {
+                scoreEntryAppend(charPressed);
+            }
+            return false;
         default:
             break;
     }
     return false;
 }
-
-$( "#score_entry_dialog" ).dialog({
-    autoOpen: false,
-    title: "Score Entry",
-    modal: true,
-    dialogClass: "no-close",
-    resizable: false,
-    draggable: false,
-    closeOnEscape: true
-});
