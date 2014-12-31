@@ -9,10 +9,6 @@ define('DEF_NUM_PLAYERS', 6);
 // If False, just make the score areas as individual text boxes.
 define('DEF_USE_ENTRY_DIALOG', True);
 
-// Working settings, since these could become dynamic in the future.
-$use_entry_dialog = DEF_USE_ENTRY_DIALOG;
-$num_players = DEF_NUM_PLAYERS;
-
 function fetchDate() {
     $now = getdate();
     return sprintf("%d/%d/%d", $now['mon'], $now['mday'], $now['year']);
@@ -94,7 +90,7 @@ for ($i = 10; $i <= 18; $i++) { /* Hole - Back 9 */
 <?php
 for ($i = 1; $i <= 9; $i++) { /* Hole - Front 9 */
     $hid = "parh$i";
-    if ($use_entry_dialog) {
+    if (DEF_USE_ENTRY_DIALOG) {
 ?>
                 <td class="scorecard" id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
                     title="Click to set the par" onclick="javascript:enterHoleScore('<?php echo
@@ -114,7 +110,7 @@ for ($i = 1; $i <= 9; $i++) { /* Hole - Front 9 */
 <?php
 for ($i = 10; $i <= 18; $i++) { /* Hole - Back 9 */
     $hid = "parh$i";
-    if ($use_entry_dialog) {
+    if (DEF_USE_ENTRY_DIALOG) {
 ?>
                 <td class="scorecard" id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
                     title="Click to set the par" onclick="javascript:enterHoleScore('<?php echo
@@ -134,7 +130,7 @@ for ($i = 10; $i <= 18; $i++) { /* Hole - Back 9 */
 
             <!-- Player rows -->
 <?php
-for ($i = 1; $i <= $num_players; $i++) { /* Player */
+for ($i = 1; $i <= DEF_NUM_PLAYERS; $i++) { /* Player */
     $id = "p$i"
 ?>
             <tr>
@@ -146,7 +142,7 @@ for ($i = 1; $i <= $num_players; $i++) { /* Player */
 <?php
     for ($h = 1; $h <= 9; $h++) { /* Hole - Front 9 */
         $hid = $id . "h$h";
-        if ($use_entry_dialog) {
+        if (DEF_USE_ENTRY_DIALOG) {
 ?>
                 <td class="number" id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
                     title="Click to enter the hole <?php echo $h; ?> score for player <?php echo $i;
@@ -167,7 +163,7 @@ for ($i = 1; $i <= $num_players; $i++) { /* Player */
 <?php
     for ($h=10; $h<=18; $h++) { /* Hole - Back 9 */
         $hid = $id . "h$h";
-        if ($use_entry_dialog) {
+        if (DEF_USE_ENTRY_DIALOG) {
 ?>
                 <td class="number" id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
                     title="Click to enter the hole <?php echo $h; ?> score for player <?php echo $i;
@@ -206,8 +202,8 @@ for ($i = 1; $i <= $num_players; $i++) { /* Player */
             &nbsp;
             <input class="scorecard_id" type="text" id="scorecard_id" name="scorecard_id" value=""
                 size="40" placeholder="???" readonly="readonly" />
-            <input type="hidden" id="num_players" name="num_players" value="<?php echo $num_players;
-                ?>" />
+            <input type="hidden" id="num_players" name="num_players" value="<?php echo
+                DEF_NUM_PLAYERS; ?>" />
         </span>
     </form>
 
@@ -237,7 +233,7 @@ for ($i = 1; $i <= $num_players; $i++) { /* Player */
 </p>
 
 <?php
-if ($use_entry_dialog) {
+if (DEF_USE_ENTRY_DIALOG) {
 ?>
 <div id="score_entry_dialog" title="Score Entry">
     <form method="post" id="gsentry" name="gsentry">
@@ -349,7 +345,7 @@ if ($use_entry_dialog) {
 <script src="js/jquery/jquery-ui.min.js"></script>
 <script>
 // Set global settings
-var defNumPlayers = <?php echo $num_players; ?>;
+var defNumPlayers = <?php echo DEF_NUM_PLAYERS; ?>;
 <script src="js/scorecard.js"></script>
 <script>
 document.getElementById('score_box_entry').onkeypress = keypressHandler;
