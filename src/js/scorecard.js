@@ -184,8 +184,6 @@ function fetchDate() {
     return (1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear();
 }
 
-}
-
 function enterHoleScore(holeID) {
     // holeID should be the ID of the control into which the score would be entered.
     $( "#score_entry_dialog" ).data( "target_id", holeID ); // Save the control
@@ -465,7 +463,7 @@ function keypressHandler(e) {
     return false;
 }
 
-$(function () {
+$(function() {
     // After the page has been loaded, run these javascript commands to make
     // sure the GUI state is consistent.
 
@@ -479,7 +477,20 @@ $(function () {
     }
     updateCourseInfoGui();
     newScorecardID();
-    return true;
+
+    document.getElementById('score_box_entry').onkeypress = keypressHandler;
+    document.getElementById('score_box_entry').onkeyup = keyupHandler;
+    document.getElementById('score_box_entry').onkeydown = keydownHandler;
+
+    $( "#score_entry_dialog" ).dialog({
+        autoOpen: false,
+        title: "Score Entry",
+        modal: true,
+        dialogClass: "no-close",
+        resizable: false,
+        draggable: false,
+        closeOnEscape: true
+    });
 });
 
 })();

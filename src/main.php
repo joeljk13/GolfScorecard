@@ -346,22 +346,7 @@ if (DEF_USE_ENTRY_DIALOG) {
 <script>
 // Set global settings
 var defNumPlayers = <?php echo DEF_NUM_PLAYERS; ?>;
-<script src="js/scorecard.js"></script>
-<script>
-document.getElementById('score_box_entry').onkeypress = keypressHandler;
-document.getElementById('score_box_entry').onkeyup = keyupHandler;
-document.getElementById('score_box_entry').onkeydown = keydownHandler;
-
-$( "#score_entry_dialog" ).dialog({
-    autoOpen: false,
-    title: "Score Entry",
-    modal: true,
-    dialogClass: "no-close",
-    resizable: false,
-    draggable: false,
-    closeOnEscape: true
-});
 </script>
-</head>
+<script src="js/scorecard.js"></script>
 </body>
 </html>
