@@ -31,10 +31,6 @@ function fetchDate() {
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="css/jquery/jquery-ui.min.css">
     <link rel="stylesheet" href="css/scorecard.css">
-    <script src="js/jquery/jquery-2.1.1.min.js"></script>
-    <script src="js/jquery/jquery-ui.min.js"></script>
-    <script src="js/scorecard.js"></script>
-</head>
 <body onload="javascript:initAll(<?php echo $num_players; ?>);">
     <form method="post" id="gscard" name="gscard">
     <p><span class="program_name"><?php echo NAME; ?></span><span class="program_version"> &ndash; Version <?php echo VERSION; ?></span>
@@ -254,6 +250,15 @@ if ($use_entry_dialog) {
     </table>
     </form>
 </div>
+<?php
+}
+?>
+
+<br/>
+<p class="copyright">Copyright &copy; 2014 Jim &amp; Joel Kottas.  All rights reserved.</p>
+<script src="js/jquery/jquery-2.1.1.min.js"></script>
+<script src="js/jquery/jquery-ui.min.js"></script>
+<script src="js/scorecard.js"></script>
 <script><!--
 document.getElementById('score_box_entry').onkeypress = keypressHandler;
 document.getElementById('score_box_entry').onkeyup = keyupHandler;
@@ -269,11 +274,6 @@ $( "#score_entry_dialog" ).dialog({
     closeOnEscape: true
 });
 --></script>
-<?php
-}
-?>
-
-<br/>
-<p class="copyright">Copyright &copy; 2014 Jim &amp; Joel Kottas.  All rights reserved.</p>
+</head>
 </body>
 </html>
