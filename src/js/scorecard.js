@@ -14,7 +14,6 @@ var scoreIDrows = [];
 // The default number of players to expect.  This value could grow dynamically in the future.
 var defNumPlayers = 0;
 
-
 function addScoreIDandRow(cellid, rownum) {
     scoreIDrows.push([cellid, rownum]);
 }
@@ -331,9 +330,11 @@ function moveCursorToEnd(el) {
 }
 
 
-// The JavaScript functions below are for the jQuery UI for entering in a score value via the dialog box.
+// The JavaScript functions below are for the jQuery UI for entering in a score
+// value via the dialog box.
 //
-// Note:  The keyboard event handlers below return false when the default handler should not be called.
+// Note:  The keyboard event handlers below return false when the default
+// handler should not be called.
 //
 // From http://permadi.com/tutorial/jsEventBubbling/index.html:
 //      By assigning an event handler like above, our handler will be called before the
