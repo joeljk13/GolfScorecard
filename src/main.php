@@ -255,52 +255,52 @@ if ($use_entry_dialog) {
             </tr>
             <tr>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value1" name="value1" 
+                    <button type="button" class="score_entry" id="value1" name="value1"
                         onclick="javascript:scoreEntryAppend(1);">1</button>
                 </td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value2" name="value2" 
+                    <button type="button" class="score_entry" id="value2" name="value2"
                         onclick="javascript:scoreEntryAppend(2);">2</button>
                 </td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value3" name="value3" 
+                    <button type="button" class="score_entry" id="value3" name="value3"
                         onclick="javascript:scoreEntryAppend(3);">3</button>
                 </td>
                 <td class="score_entry_cmd" colspan="3">
-                    <button type="button" class="score_entry_cmd" id="valueCancel" 
+                    <button type="button" class="score_entry_cmd" id="valueCancel"
                         name="valueCancel" onclick="javascript:scoreEntryCancel();">Cancel</button>
                 </td>
             </tr>
             <tr>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value4" name="value4" 
+                    <button type="button" class="score_entry" id="value4" name="value4"
                         onclick="javascript:scoreEntryAppend(4);">4</button>
                 </td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value5" name="value5" 
+                    <button type="button" class="score_entry" id="value5" name="value5"
                         onclick="javascript:scoreEntryAppend(5);">5</button>
                 </td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value6" name="value6" 
+                    <button type="button" class="score_entry" id="value6" name="value6"
                         onclick="javascript:scoreEntryAppend(6);">6</button>
                 </td>
                 <td class="score_entry_cmd" colspan="3">
-                    <button type="button" class="score_entry_cmd" id="valueBackspace" 
-                        name="valueBackspace" 
+                    <button type="button" class="score_entry_cmd" id="valueBackspace"
+                        name="valueBackspace"
                         onclick="javascript:scoreEntryBackspace();">Backspace</button>
                 </td>
             </tr>
             <tr>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value7" name="value7" 
+                    <button type="button" class="score_entry" id="value7" name="value7"
                         onclick="javascript:scoreEntryAppend(7);">7</button>
                 </td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value8" name="value8" 
+                    <button type="button" class="score_entry" id="value8" name="value8"
                         onclick="javascript:scoreEntryAppend(8);">8</button>
                 </td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value9" name="value9" 
+                    <button type="button" class="score_entry" id="value9" name="value9"
                         onclick="javascript:scoreEntryAppend(9);">9</button>
                 </td>
                 <td class="score_entry_cmd" colspan="3">
@@ -311,27 +311,27 @@ if ($use_entry_dialog) {
             <tr>
                 <td></td>
                 <td class="score_entry">
-                    <button type="button" class="score_entry" id="value0" name="value0" 
+                    <button type="button" class="score_entry" id="value0" name="value0"
                         onclick="javascript:scoreEntryAppend(0);">0</button>
                 </td>
                 <td></td>
                 <td>
-                    <button type="button" class="score_entry" id="valuestar" name="valuestar" 
+                    <button type="button" class="score_entry" id="valuestar" name="valuestar"
                         onclick="javascript:scoreEntryAppend('*');">*</button>
                 </td>
                 <td>
-                    <button type="button" class="score_entry" id="valuehash" name="valuehash" 
+                    <button type="button" class="score_entry" id="valuehash" name="valuehash"
                         onclick="javascript:scoreEntryAppend('#');">#</button>
                 </td>
                 <td>
-                    <button type="button" class="score_entry" id="valueplus" name="valueplus" 
+                    <button type="button" class="score_entry" id="valueplus" name="valueplus"
                         onclick="javascript:scoreEntryAppend('+');">+</button>
                 </td>
             </tr>
             <tr id="score_instructions_row" name="score_instructions_row">
-                <td class="score_entry_instructions" colspan="6" id="score_instructions" 
+                <td class="score_entry_instructions" colspan="6" id="score_instructions"
                     name="score_instructions">
-                    The *, #, and + symbols can be used to keep track of special cases, such as 
+                    The *, #, and + symbols can be used to keep track of special cases, such as
                     mulligans, gimmes, clangs, or a minimum approximate score.
                 </td>
             </tr>
