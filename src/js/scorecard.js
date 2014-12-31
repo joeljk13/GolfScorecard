@@ -1,6 +1,6 @@
 /*!
  * scorecard.js
- * JavaScript library for the GolfScorecard web site.
+ * JavaScript for the GolfScorecard web site.
  * Uses jQuery.
  *
  * Copyright (c) 2014 Jim & Joel Kottas.  All rights reserved.
