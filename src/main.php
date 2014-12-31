@@ -194,10 +194,9 @@ for ($i = 1; $i <= $num_players; $i++) { /* Player */
                 <td class="scorecard">Notes</td>
                 <td colspan="21" class="notes">
                     <textarea id="course_notes" name="course_notes" rows="2" cols="72"
-                        maxlength="300"
                         placeholder="Enter any memorable thoughts about the course or the round"
-                        title="Click to enter any memorable thoughts about the course or the round">
-                    </textarea>
+                        title="Click to enter any memorable thoughts about the course or the round"
+                        maxlength="300"></textarea>
                 </td>
             </tr>
         </table>
