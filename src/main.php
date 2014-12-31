@@ -30,7 +30,7 @@ function fetchDate() {
     <link rel="stylesheet" href="css/jquery/jquery-ui.min.css">
     <link rel="stylesheet" href="css/scorecard.css">
 </head>
-<body onload="javascript:initAll(<?php echo $num_players; ?>);">
+<body>
     <form method="post" id="gscard" name="gscard">
         <p>
             <span class="program_name"><?php echo NAME; ?></span>
@@ -347,6 +347,9 @@ if ($use_entry_dialog) {
 
 <script src="js/jquery/jquery-2.1.1.min.js"></script>
 <script src="js/jquery/jquery-ui.min.js"></script>
+<script>
+// Set global settings
+var defNumPlayers = <?php echo $num_players; ?>;
 <script src="js/scorecard.js"></script>
 <script>
 document.getElementById('score_box_entry').onkeypress = keypressHandler;

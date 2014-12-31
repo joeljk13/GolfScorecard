@@ -14,9 +14,6 @@
 // row numbers.  The par row is number 0, player 1 row is 1, etc.
 var scoreIDrows = [];
 
-// The default number of players to expect.  This value could grow dynamically in the future.
-var defNumPlayers = 0;
-
 function addScoreIDandRow(cellid, rownum) {
     scoreIDrows.push([cellid, rownum]);
 }
@@ -188,24 +185,6 @@ function fetchDate() {
     return (1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear();
 }
 
-function initAll(num_players) {
-    // After the page has been loaded, run these javascript commands to make
-    // sure the GUI state is consistent.
-
-    // Save the number of players as the default number of players to expect.
-    defNumPlayers = num_players;
-
-    // Initialize the array of all cell IDs that can contain scores.
-    for (var p = 0; p <= num_players; p++) {
-        var pid = "p" + ((p == 0) ? "ar" : String(p));
-        for (var h = 1; h <= 18; h++) {
-            var hid = pid + "h" + String(h);
-            addScoreIDandRow(hid, p);
-        }
-    }
-    updateCourseInfoGui();
-    newScorecardID();
-    return true;
 }
 
 function enterHoleScore(holeID) {
@@ -486,5 +465,22 @@ function keypressHandler(e) {
     }
     return false;
 }
+
+$(function () {
+    // After the page has been loaded, run these javascript commands to make
+    // sure the GUI state is consistent.
+
+    // Initialize the array of all cell IDs that can contain scores.
+    for (var p = 0; p <= num_players; p++) {
+        var pid = "p" + ((p == 0) ? "ar" : String(p));
+        for (var h = 1; h <= 18; h++) {
+            var hid = pid + "h" + String(h);
+            addScoreIDandRow(hid, p);
+        }
+    }
+    updateCourseInfoGui();
+    newScorecardID();
+    return true;
+});
 
 })();
