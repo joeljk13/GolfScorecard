@@ -31,6 +31,7 @@ function fetchDate() {
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="css/jquery/jquery-ui.min.css">
     <link rel="stylesheet" href="css/scorecard.css">
+</head>
 <body onload="javascript:initAll(<?php echo $num_players; ?>);">
     <form method="post" id="gscard" name="gscard">
     <p><span class="program_name"><?php echo NAME; ?></span><span class="program_version"> &ndash; Version <?php echo VERSION; ?></span>
