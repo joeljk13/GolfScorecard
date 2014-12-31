@@ -7,6 +7,9 @@
  * Date: 2014-12-28
  */
 
+(function() {
+"use strict";
+
 // Declare a global variable that will hold the array of cell IDs for scores and their corresponding
 // row numbers.  The par row is number 0, player 1 row is 1, etc.
 var scoreIDrows = [];
@@ -483,3 +486,5 @@ function keypressHandler(e) {
     }
     return false;
 }
+
+})();
