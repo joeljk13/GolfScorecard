@@ -259,7 +259,7 @@ if ($use_entry_dialog) {
 <script src="js/jquery/jquery-2.1.1.min.js"></script>
 <script src="js/jquery/jquery-ui.min.js"></script>
 <script src="js/scorecard.js"></script>
-<script><!--
+<script>
 document.getElementById('score_box_entry').onkeypress = keypressHandler;
 document.getElementById('score_box_entry').onkeyup = keyupHandler;
 document.getElementById('score_box_entry').onkeydown = keydownHandler;
@@ -273,7 +273,7 @@ $( "#score_entry_dialog" ).dialog({
     draggable: false,
     closeOnEscape: true
 });
---></script>
+</script>
 </head>
 </body>
 </html>
