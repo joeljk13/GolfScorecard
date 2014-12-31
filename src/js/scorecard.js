@@ -4,7 +4,6 @@
  * Uses jQuery.
  *
  * Copyright (c) 2014 Jim & Joel Kottas.  All rights reserved.
- * Date: 2014-12-28
  */
 
 (function() {
