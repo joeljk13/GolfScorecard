@@ -74,7 +74,7 @@ echo "-->";
         <span id="date"></span>
     </div>
     <form method="post">
-        <p>
+        <div>
             <label id="select_course_label" for="select_course">Select Course:</label>
             <select id="select_course" name="select_course"
                 title="Click to select a predefined course"
@@ -87,14 +87,21 @@ foreach ($courses as $course) {
 }
 ?>
             </select>
-            &nbsp; &nbsp; &nbsp;
-            <label id="other_course_name_label" for="other_course_name" hidden="hidden">Course
-                Information:</label>
-            <input type="text" placeholder="Enter course name and location"
-                id="other_course_name" name="other_course_name" hidden="hidden" maxlength="128"
-                size="48"
-                title="Click to enter any name and location information about this course" />
-        </p>
+            <span id="other_course">
+                <label id="other_course_name_label" for="other_course_name">Name:</label>
+                <input type="text" placeholder="Course name"
+                    name="other_course_name" maxlength="128" size="48"
+                    title="Click to enter the name of this course" />
+                <label id="other_course_city_label" for="other_course_city">City:</label>
+                <input type="text" placeholder="Course city" id="other_course_city"
+                    name="other_course_city" maxlength="128" size="48"
+                    title="Click to enter the city that this course is in" />
+                <label id="other_course_state_label" for="other_course_state">State:</label>
+                <input type="text" id="other_course_state"
+                    name="other_course_state" maxlength="2" size="2"
+                    title="Click to enter the state that this course is in" />
+            </span>
+        </div>
 
         <table class="scorecard">
         <!-- Hole # row -->
