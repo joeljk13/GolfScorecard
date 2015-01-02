@@ -104,73 +104,73 @@ foreach ($courses as $course) { ?>
             </span>
         </div>
 
-        <table class="scorecard">
+        <table id="scorecard">
         <!-- Hole # row -->
-            <thead class="scorecard">
+            <thead>
                 <tr>
-                    <td class="scorecard">Hole #</td>
+                    <td>Hole #</td>
 <?php
 for ($i = 1; $i <= 9; $i++) { /* Hole - Front 9 */
 ?>
-                    <td class="scorecard"><?php echo $i; ?></td>
+                    <td><?php echo $i; ?></td>
 <?php
 } /* Hole - Front 9 */
 ?>
-                    <td class="scorecard">Out</td>
+                    <td>Out</td>
 <?php
 for ($i = 10; $i <= 18; $i++) { /* Hole - Back 9 */
 ?>
-                    <td class="scorecard"><?php echo $i; ?></td>
+                    <td><?php echo $i; ?></td>
 <?php
 } /* Hole - Back 9 */
 ?>
-                    <td class="scorecard">In</td>
-                    <td class="scorecard">Total</td>
+                    <td>In</td>
+                    <td>Total</td>
                 </tr>
             </thead>
 
             <!-- Par row -->
             <tr class="par">
-                <td class="scorecard">Par</td>
+                <td>Par</td>
 <?php
 for ($i = 1; $i <= 9; $i++) { /* Hole - Front 9 */
     $hid = "parh$i";
     if (DEF_USE_ENTRY_DIALOG) {
 ?>
-                <td class="scorecard" id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
+                <td id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
                     title="Click to set the par" onclick="javascript:enterHoleScore('<?php echo
                     $hid; ?>');">3</td>
 <?php
     } else {
 ?>
-                <td class="scorecard">
-                    <input type="text" class="scorecard" maxlength="8" id="<?php echo $hid; ?>name"
+                <td>
+                    <input type="text" maxlength="8" id="<?php echo $hid; ?>name"
                         placeholder="" size="2" title="Click to set the par" />
                 </td>
 <?php
     }
 } /* Hole - Front 9 */
 ?>
-                <td class="scorecard" id="parout" name="parout">27</td>
+                <td id="parout" name="parout">27</td>
 <?php
 for ($i = 10; $i <= 18; $i++) { /* Hole - Back 9 */
     $hid = "parh$i";
     if (DEF_USE_ENTRY_DIALOG) {
 ?>
-                <td class="scorecard" id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
+                <td id="<?php echo $hid; ?>" name="<?php echo $hid; ?>"
                     title="Click to set the par" onclick="javascript:enterHoleScore('<?php echo
                     $hid; ?>');">3</td>
 <?php
     } else {
 ?>
-                <td class="scorecard"><input type="text" class="scorecard" maxlength="8" id="<?php
+                <td><input type="text" class="scorecard" maxlength="8" id="<?php
                     echo $hid; ?>name" placeholder="" size="2" title="Click to set the par" /></td>
 <?php
     }
 } /* Hole - Back 9 */
 ?>
-                <td class="scorecard" id="parin" name="parin">27</td>
-                <td class="scorecard" id="partotal" name="partotal">54</td>
+                <td id="parin" name="parin">27</td>
+                <td id="partotal" name="partotal">54</td>
             </tr>
 
             <!-- Player rows -->
@@ -232,7 +232,7 @@ for ($i = 1; $i <= DEF_NUM_PLAYERS; $i++) { /* Player */
 ?>
 
             <tr class="notes">
-                <td class="scorecard">Notes</td>
+                <td>Notes</td>
                 <td colspan="21" class="notes">
                     <textarea id="course_notes" name="course_notes" rows="2" cols="72"
                         placeholder="Enter any memorable thoughts about the course or the round"
