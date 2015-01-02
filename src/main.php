@@ -27,6 +27,7 @@ function fetchDate() {
     <link rel="stylesheet" href="css/scorecard.css">
 </head>
 <body>
+    <noscript>You must have Javascript enabled for this to work.</noscript>
     <div id="header">
         <span id="program_name"><?php echo NAME; ?></span>
         <span id="program_version">Version <?php echo VERSION; ?></span>
