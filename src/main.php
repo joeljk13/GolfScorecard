@@ -33,11 +33,11 @@ class Course {
     }
 }
 
-// The first one will be the default selected one
+$default_course = new Course("The General", "Devens", "MA",
+    array(3, 3, 3, 3, 4, 3, 3, 3, 3),
+    array(3, 4, 3, 3, 3, 3, 3, 3, 3));
+
 $courses = array(
-    new Course("The General", "Devens", "MA",
-        array(3, 3, 3, 3, 4, 3, 3, 3, 3),
-        array(3, 4, 3, 3, 3, 3, 3, 3, 3)),
     new Course("The Hill", "Devens", "MA",
         array(3, 3, 3, 3, 3, 3, 3, 3, 3),
         array(3, 3, 3, 3, 3, 3, 3, 3, 3)),
@@ -79,9 +79,10 @@ echo "-->";
             <select id="select_course" name="select_course"
                 title="Click to select a predefined course"
                 onchange="javascript:updateCourseInfoGui();">
+                    <option id="<?php echo $default_course->id; ?>"><?php echo
+                        $default_course->str; ?></option>
 <?php
-foreach ($courses as $course) {
-?>
+foreach ($courses as $course) { ?>
                     <option id="<?php echo $course->id; ?>"><?php echo $course->str; ?></option>
 <?php
 }
