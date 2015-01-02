@@ -27,15 +27,13 @@ function fetchDate() {
     <link rel="stylesheet" href="css/scorecard.css">
 </head>
 <body>
-    <form method="post" id="gscard" name="gscard">
-        <p>
-            <span class="program_name"><?php echo NAME; ?></span>
-            <span class="program_version">&ndash; Version <?php echo VERSION; ?></span>
-            <?php for ($i = 0; $i < 40; $i++) { ?> &nbsp; <?php } ?>
-            <label for="main_date" id="main_date_label" name="main_date_label">Date:</label>
-            <input type="text" id="main_date" name="main_date" readonly="readonly" />
-        </p>
-
+    <div id="header">
+        <span id="program_name"><?php echo NAME; ?></span>
+        <span id="program_version">Version <?php echo VERSION; ?></span>
+        <span id="date_label">Date:</span>
+        <span id="date"></span>
+    </div>
+    <form method="post">
         <p>
             <label id="select_course_label" for="select_course">Select Course:</label>
             <select id="select_course" name="select_course"
