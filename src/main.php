@@ -1,4 +1,6 @@
 <?php
+echo "<!--";
+
 define('NAME', "Golf Scorecard");
 define('VERSION', "0.8.11");
 
@@ -13,6 +15,43 @@ function fetchDate() {
     $now = getdate();
     return sprintf("%d/%d/%d", $now['mon'], $now['mday'], $now['year']);
 }
+
+class Course {
+    function __construct($name, $city, $state, $outPars, $inPars) {
+        $this->name = $name;
+        $this->city = $city;
+        $this->state = $state;
+        $this->outPars = $outPars;
+        $this->inPars = $inPars;
+
+        $this->id = str_replace(" ", "_", "course_" . $this->name . $this->city
+            . $this->state);
+        $this->str = $this->name;
+        if ($this->city && $this->state) {
+            $this->str .= " ($this->city, $this->state)";
+        }
+    }
+}
+
+// The first one will be the default selected one
+$courses = array(
+    new Course("The General", "Devens", "MA",
+        array(3, 3, 3, 3, 4, 3, 3, 3, 3),
+        array(3, 4, 3, 3, 3, 3, 3, 3, 3)),
+    new Course("The Hill", "Devens", "MA",
+        array(3, 3, 3, 3, 3, 3, 3, 3, 3),
+        array(3, 3, 3, 3, 3, 3, 3, 3, 3)),
+    new Course("Muldoon Park", "Pelham", "NH",
+        array(3, 3, 3, 3, 3, 4, 3, 3, 3),
+        array(3, 3, 3, 3, 3, 3, 3, 4, 3)),
+    new Course("Typical Minigolf Course", "", "",
+        array(2, 2, 2, 2, 2, 2, 2, 2, 2),
+        array(2, 2, 2, 2, 2, 2, 2, 2, 2)),
+    new Course("Other", "", "",
+        array(3, 3, 3, 3, 3, 3, 3, 3, 3),
+        array(3, 3, 3, 3, 3, 3, 3, 3, 3)));
+
+echo "-->";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,14 +79,13 @@ function fetchDate() {
             <select id="select_course" name="select_course"
                 title="Click to select a predefined course"
                 onchange="javascript:updateCourseInfoGui();">
-                    <!-- If any options are added, update the updateParBasedOnCourse() function
-                         to include any non-par 3 holes. -->
-                    <option value="MA_Devens_TheGeneral" selected="selected" >MA - Devens - The
-                        General</option>
-                    <option value="MA_Devens_TheHill">MA - Devens - The Hill</option>
-                    <option value="NH_Pelham_MuldoonPark">NH - Pelham - Muldoon Park</option>
-                    <option value="typical_minigolf">Typical Minigolf Course</option>
-                    <option value="course_other">Other</option>
+<?php
+foreach ($courses as $course) {
+?>
+                    <option id="<?php echo $course->id; ?>"><?php echo $course->str; ?></option>
+<?php
+}
+?>
             </select>
             &nbsp; &nbsp; &nbsp;
             <label id="other_course_name_label" for="other_course_name" hidden="hidden">Course
