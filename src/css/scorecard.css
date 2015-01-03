@@ -6,7 +6,133 @@
  * Copyright (c) 2014 Jim and Joel Kottas.  All rights reserved.
  */
 
+noscript {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: #C00;
+    color: white;
+    font-weight: bold;
+    padding: 2px;
+}
+
+#program_name {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+#program_version {
+    font-size: smaller;
+    font-style: italic;
+}
+
+#date_span {
+    float: right;
+}
+
+#select {
+    margin-top: 1em;
+}
+
+#scorecard {
+    margin-top: 1em;
+    border: 2px solid black;
+}
+
+#header-row {
+    font-weight: bold;
+    text-align: center;
+    background-color: black;
+    color: white;
+}
+
+#par-row {
+    font-weight: bold;
+    text-align: center;
+    background-color: #FFCC66;
+}
+
+#par-row > td {
+    font-weight: bold;
+    text-align: center;
+    background-color: #FFCC66;
+}
+
+#par-row input {
+    width: 4em;
+}
+
+#scorecard td {
+    padding: 2px;
+    border: 1px solid black;
+}
+
+.player-name {
+    border: none;
+    padding-left: 4;
+    padding-right: 4;
+    width: 12em;
+}
+
+.score {
+    text-align: center;
+    min-width: 20px;
+    border-color: gray !important;
+}
+
+.score > input {
+    width: 4em;
+}
+
+.sum {
+    text-align: center;
+    font-weight: bold;
+    min-width: 40px;
+    border-color: gray !important;
+    background-color: #D8D8D8;
+}
+
+#course_notes_label {
+    font-weight: bold;
+    text-align: center;
+    background-color: #CCFFFF;
+}
+
+#course_notes {
+    border: none !important;
+    background-color: #CCFFFF;
+}
+
+#course_notes > textarea {
+    border: 1px solid black;
+    resize: none;
+}
+
+#scorecard-row {
+    background-color: #CCC;
+}
+
+#scorecard-id {
+    font-size: small;
+    font-style: normal;
+}
+
+#resources-label {
+    margin-top: 1em;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#copyright {
+    margin-top: 1em;
+    font-size: smaller;
+    font-style: italic;
+}
+
 /* Main scorecard view */
+/*
 table.scorecard {
     border: 2px solid black;
 }
@@ -85,6 +211,7 @@ span.program_version {
 }
 
 /* Score entry view */
+/*
 table.score_entry {
 }
 td.score_entry {
@@ -122,3 +249,4 @@ button.score_entry_cmd {
 .no-close .ui-dialog-titlebar {
     display: none;
 }
+*/
