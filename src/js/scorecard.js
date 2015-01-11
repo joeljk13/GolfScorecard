@@ -6,22 +6,39 @@
  * Copyright (c) 2014-2015 Jim & Joel Kottas.  All rights reserved.
  */
 
+/* Trims whitespace from the left side of a string. */
 function triml(str) {
     return str.replace(/^\s+/, '');
 }
 
+/* Trims whitespace from the right side of a string. */
 function trimr(str) {
     return str.replace(/\s+$/, '');
 }
 
+/* Replaces any occurances of multiple whitespace characters in a row with a
+ * single space. */
 function trimm(str) {
     return str.replace(/\s+/g, ' ');
 }
 
+/* Does all of trimm, triml, trimr. */
 function trim(str) {
     return trimm(triml(trimr(str)));
 }
 
+/* Create a course with new Course(NAME, CITY, STATE, OUT_PARS, IN_PARS).
+ * this.name = NAME - The name of the course.
+ * this.city = CITY - The name of the city the course is in.
+ * this.state = STATE - The 2 letter abbreviation of the state that the course is in.
+ * this.outPars = OUT_PARS - An array of pars for the front 9 holes (e.g. [3,
+ *      3, 3, 3, 3, 3, 3, 3,  3]).
+ * this.inPars = IN_PARS - An array of pars for the back 9 holes, like
+ *      OUT_PARS. Make this null for courses with only 9 holes.
+ *
+ * this.id is a unique id for this course.
+ * this.str is the pretty string that should be displayed to the user.
+ */
 function Course(name, city, state, outPars, inPars) {
     this.name = name;
     this.city = city;
@@ -43,7 +60,10 @@ function Course(name, city, state, outPars, inPars) {
     }
 }
 
+// Using an anonomous function to avoid poluting the global scope
 (function() {
+// "use strict" tells the browser to generate more errors than normal. This
+// only applies to this function.
 "use strict";
 
 function randomIntFromInterval(min, max) {
@@ -56,6 +76,29 @@ function fetchDate() {
     return (1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear();
 }
 
+/* Create with new Data(INITIAL_DATA).
+ * Note: This is immutable! To modify, create a new Data and leave the old one
+ * for the garbage collector.
+ *
+ * If INITIAL_DATA is a string, this formats it correctly. It can be gotten
+ * with this.getDataStr().
+ * If INITIAL_DATA is an object, this assumes it is formatted correctly (see
+ * this.getDataObject() format), and uses that object for the data and to
+ * create the string.
+ *
+ * this.getDataHTML() - gets an HTML string used to display a score to the user
+ * this.getDataObject() - gets the internal data structure.
+ *      This is an object.
+ *      The key 'number' is the number representing the score.
+ *      All other keys are a single character, with a value being the number of
+ *          times it appears in the score string.
+ *      For example, the score string "4+##" would generate:
+ *      {
+ *          number: 4,
+ *          '+': 1,
+ *          '#': 2
+ *      }
+ */
 function Data(initData) {
     var data_ = null;
     var str_ = "";
@@ -142,6 +185,9 @@ function Data(initData) {
     }
 }
 
+/* Adds a and b (which are turned into Data instances if they aren't already)
+ * to get a new Data instance. This adds the scores and the numbers of each
+ * symbol. */
 Data.add = function(a, b) {
     if (!(a instanceof Data)) {
         a = new Data(a);
@@ -165,6 +211,24 @@ Data.add = function(a, b) {
     return new Data(data);
 }
 
+/* Create with new Input(INITIAL_DATA, UPDATER).
+ * An Input is the Javascript object that represents a score field where you
+ * can click on it to edit and 'un-click' it to save the new data. This is used
+ * for the scores and the pars.
+ *
+ * INITIAL_DATA - The initial data. This is passed to new Data().
+ * UPDATER - A function that is called whenever the data in this field is
+ *      changed. Note that currently constructing an input will call UPDATER.
+ *
+ * this.$div - the jQuery element that contains the HTML that displays the
+ *      score.
+ * this.$input - the jQuery element that represents the input element.
+ * this.$html - the jQuery element that encompasses all that's needed to be
+ *      added to the DOM for this to work.
+ * this.getData() - gets the Data object associated with this Input currently.
+ * this.setData(DATA) - sets the data in this input to DATA. If DATA is not an
+ *      instance of Data, it is converted to one.
+ */
 function Input(initData, updater) {
     this.$div = $(document.createElement('div'));
     this.$input = $(document.createElement('input'));
@@ -216,6 +280,20 @@ function Input(initData, updater) {
 
 var scorecards = {};
 
+/* Gets the scorecard object for the given course. Each course gets exactly 1
+ * scorecard. Lazily creates and reuses the scorecards for each course.
+ * this.id -  A unique scorecard id.
+ * this.outPars - An array of the front pars; gotten from course.
+ * this.inPars - An array of the back pars; gotten from course.
+ * this.players - An array of player names.
+ * this.nHoles - The number of holes.
+ * this.scores - A multidimentional array of scores. Access with scores[PLAYER
+ *      NUMBER][0 if front 9, 1 if back 9][HOLE] (all arrays are 0-based).
+ *      Each element is an Input after this.getTable() is called.
+ * this.notes - The notes about this scorecard.
+ * this.getTable() - Gets the jQuery element that represents the table that
+ *      should be put on the page for this scorecard.
+ */
 function getScorecard(course) {
     if (!(this instanceof getScorecard)) {
         if (course.id in scorecards) {
@@ -275,6 +353,7 @@ function getScorecard(course) {
     var self = this;
 
     this.getTable = function() {
+        // Create header with hole numbers
         var headerRow = $("<tr></tr>")
             .attr('id', 'header-row')
             .append($("<td></td>").html("Hole #"));
@@ -291,6 +370,7 @@ function getScorecard(course) {
         }
         headerRow.append($("<td></td>").html("Total"));
 
+        // Create row with pars
         var parRow = $("<tr></tr>")
             .attr('id', 'par-row')
             .append($("<td></td>").html("Par"));
@@ -298,11 +378,13 @@ function getScorecard(course) {
         var inParTotal = $("<td></td>");
         var parTotal = $("<td></td>");
 
+        // Adds the data of scores a and b.
         function addScores(a, b) {
             return Data.add(a instanceof Input ? a.getData() : a,
                             b instanceof Input ? b.getData() : b);
         }
 
+        // Helper functions
         function outParTotalData() {
             return self.outPars.reduce(addScores);
         }
@@ -347,6 +429,7 @@ function getScorecard(course) {
 
         parRow.append(parTotal);
 
+        // It can't hurt to make sure they're updated.
         updateOutParTotal();
         updateInParTotal();
         updateParTotal();
@@ -354,6 +437,8 @@ function getScorecard(course) {
         var tbody = $("<tbody></tbody>");
 
         for (var i = 0; i < this.players.length; ++i) {
+            // Create a new scope for all player variables, including the
+            // player index
             (function(i) {
                 var playerRow = $("<tr></tr>").append(
                     $("<td></td>").append(
@@ -369,6 +454,7 @@ function getScorecard(course) {
                 var inPlayerTotal = $("<td></td>").addClass('sum');
                 var playerTotal = $("<td></td>").addClass('sum');
 
+                // Helper functions
                 function outPlayerTotalData() {
                     return self.scores[i][0].reduce(addScores, new Data(""));
                 }
@@ -425,6 +511,7 @@ function getScorecard(course) {
             })(i);
         }
 
+        // 3 == Player names + Out total + Total
         var colspan = this.nHoles + (this.inPars ? 4 : 3);
 
         return $("<table></table>")
@@ -475,6 +562,9 @@ function getUserInput(p) {
     return prompt(p, "");
 }
 
+/* Sets the new course to course. Prompts the user for info if course ===
+ * otherCourse.
+ */
 function setCourse(course) {
     currentCourse = course;
     $("#scorecard").replaceWith(getScorecard(course).getTable());
@@ -514,6 +604,7 @@ function selectChange() {
     }
 }
 
+/* Creates the course selection dropdown and label. */
 function createSelect() {
     var options = [];
     for (var i = 0; i < courses.length; ++i) {
@@ -542,8 +633,8 @@ function setDate() {
 }
 
 $(function() {
-    // After the page has been loaded, run these javascript commands to make
-    // sure the GUI state is consistent.
+    // After the page has been loaded, run these javascript commands to set up
+    // any part of the page that needs to be created dynamically.
 
     setDate();
     createSelect();
