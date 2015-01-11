@@ -47,7 +47,7 @@ function fetchDate() {
     </li>
 </ul>
 
-<p id="copyright">Copyright &copy; 2014 Jim &amp; Joel Kottas.  All rights reserved.</p>
+<p id="copyright">Copyright &copy; 2014 &ndash; 2015 Jim &amp; Joel Kottas.  All rights reserved.</p>
 
 <script src="js/jquery/jquery-2.1.1.min.js"></script>
 <script>

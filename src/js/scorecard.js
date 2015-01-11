@@ -3,7 +3,7 @@
  * JavaScript for the GolfScorecard web site.
  * Uses jQuery.
  *
- * Copyright (c) 2014 Jim & Joel Kottas.  All rights reserved.
+ * Copyright (c) 2014-2015 Jim & Joel Kottas.  All rights reserved.
  */
 
 function triml(str) {
