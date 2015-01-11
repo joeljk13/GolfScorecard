@@ -42,6 +42,7 @@ function trim(str) {
 function Course(name, city, state, outPars, inPars) {
     this.name = name;
     this.city = city;
+    this.state = state;
     this.outPars = outPars;
     this.inPars = inPars;
 
