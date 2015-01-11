@@ -594,17 +594,6 @@ function setCourse(course) {
     }
 }
 
-function selectChange() {
-    var str = $(this).val();
-
-    for (var i = 0; i < courses.length; ++i) {
-        if (courses[i].str === str) {
-            setCourse(courses[i]);
-            return;
-        }
-    }
-}
-
 /* Creates the course selection dropdown and label. */
 function createSelect() {
     var options = [];
@@ -625,7 +614,15 @@ function createSelect() {
         $("<select></select>")
             .attr('id', 'select_course')
             .attr('title', 'Click to select a predefined course')
-            .change(selectChange)
+            .change(function selectChange() {
+                        var str = $(this).val();
+                        for (var i = 0; i < courses.length; ++i) {
+                            if (courses[i].str === str) {
+                                setCourse(courses[i]);
+                                return;
+                            }
+                        }
+                    })
             .append(options));
 }
 
