@@ -284,6 +284,13 @@ function Input(initData, updater) {
         setTimeout(finalize, 100);
     });
 
+    this.$input.keypress(function(e) {
+        e = e || window.target;
+        if (e.keyCode === 13) {
+            finalize();
+        }
+    });
+
     this.setData(initData);
 }
 
