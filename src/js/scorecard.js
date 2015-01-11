@@ -270,10 +270,18 @@ function Input(initData, updater) {
         self.$input.focus();
     });
 
-    this.$input.blur(function() {
+    function finalize() {
         self.$input.hide();
         self.setData(self.$input.val());
         self.$div.show();
+    }
+
+    this.$input.blur(function() {
+        // Since $input blurs before the click event of a $div fires, hiding
+        // this input can mess up clicks on score td's that have been moved by
+        // this input. 100 ms should be short enough that it's practically
+        // immediately, but long enough to get a click to register.
+        setTimeout(finalize, 100);
     });
 
     this.setData(initData);
