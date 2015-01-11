@@ -108,6 +108,7 @@ noscript {
 #course_notes > textarea {
     border: 1px solid black;
     resize: none;
+    height: 5em;
 }
 
 #scorecard-row {
