@@ -444,7 +444,7 @@ function getScorecard(course) {
                 var playerRow = $("<tr></tr>").append(
                     $("<td></td>").append(
                         $("<input />")
-                            .attr('placeholder', 'Player ' + i)
+                            .attr('placeholder', 'Player ' + (i + 1))
                             .attr('type', 'text')
                             .addClass('player-name')
                             .val(self.players[i])
