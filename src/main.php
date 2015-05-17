@@ -19,7 +19,7 @@ function fetchDate() {
     <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="css/scorecard.css">
+    <link rel="stylesheet" href="css/scorecard.css" />
 </head>
 <body>
     <div>
