@@ -40,28 +40,58 @@
 <script src="js/jquery/jquery-2.1.1.min.js"></script>
 <script src="js/scorecard.js"></script>
 <script>
+var defCourse = 0, otherCourse = -1, currentCourse = defCourse;
 // Define pre-defined courses; the default one will be set once the DOM has 
 // loaded.
-var courses = [
-    new Course("The General", "Devens", "MA",
-        [3, 3, 3, 3, 4, 3, 3, 3, 3],
-        [3, 4, 3, 3, 3, 3, 3, 3, 3]),
-    new Course("The Hill", "Devens", "MA",
-        [3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3]),
-    new Course("Coggshall Park", "Fitchburg", "MA",
-        [3, 3, 3, 3, 3, 3, 4, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 4, 3]),
-    new Course("Muldoon Park", "Pelham", "NH",
-        [3, 3, 3, 3, 3, 4, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 4, 3]),
-    new Course("Typical Minigolf Course", "", "",
-        [2, 2, 2, 2, 2, 2, 2, 2, 2],
-        [2, 2, 2, 2, 2, 2, 2, 2, 2]),
-    new Course("Other", "", "",
-        [3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3])
-], defCourse = 0, otherCourse = courses.length - 1, currentCourse = defCourse;
+addCourse({
+    name: "The General",
+    city: "Devens",
+    state: "MA",
+    pars: {
+        out: [3, 3, 3, 3, 4, 3, 3, 3, 3],
+        in: [3, 4, 3, 3, 3, 3, 3, 3, 3],
+    }
+});
+
+addCourse({
+    name: "The Hill",
+    city: "Devens",
+    state: "MA",
+    pars: {
+        out: [3, 3, 3, 3, 3, 3, 3, 3, 3],
+        in: [3, 3, 3, 3, 3, 3, 3, 3, 3]
+    }
+});
+
+addCourse({
+    name: "Muldoon Park",
+    city: "Pelham",
+    state: "NH",
+    pars: {
+        out: [3, 3, 3, 3, 3, 4, 3, 3, 3],
+        in: [3, 3, 3, 3, 3, 3, 3, 4, 3]
+    }
+});
+
+addCourse({
+    name: "Coggshall Park",
+    city: "Fitchburg",
+    state: "MA",
+    pars: {
+        out: [3, 3, 3, 3, 3, 3, 4, 3, 3],
+        in: [3, 3, 3, 3, 3, 3, 3, 4, 3]
+    }
+});
+
+addCourse({
+    name: "Typical Minigolf Course",
+    city: "",
+    state: "",
+    pars: {
+        out: [2, 2, 2, 2, 2, 2, 2, 2, 2],
+        in: [2, 2, 2, 2, 2, 2, 2, 2, 2]
+    }
+});
 </script>
 <noscript>You must have Javascript enabled for this to work.</noscript>
 </body>

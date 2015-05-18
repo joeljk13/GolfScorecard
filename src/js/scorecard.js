@@ -27,256 +27,231 @@ function trim(str) {
     return trimm(triml(trimr(str)));
 }
 
-/* Create a course with new Course(NAME, CITY, STATE, OUT_PARS, IN_PARS).
- * this.name = NAME - The name of the course.
- * this.city = CITY - The name of the city the course is in.
- * this.state = STATE - The 2 letter abbreviation of the state that the course is in.
- * this.outPars = OUT_PARS - An array of pars for the front 9 holes (e.g. [3,
- *      3, 3, 3, 3, 3, 3, 3,  3]).
- * this.inPars = IN_PARS - An array of pars for the back 9 holes, like
- *      OUT_PARS. Make this null for courses with only 9 holes.
- *
- * this.id is a unique id for this course.
- * this.str is the pretty string that should be displayed to the user.
- */
-function Course(name, city, state, outPars, inPars) {
-    this.name = name;
-    this.city = city;
-    this.state = state;
-    this.outPars = outPars;
-    this.inPars = inPars;
-
-    this.id = "course_" + trim(this.name + this.city +
-        this.state).replace(/\s/g, '_');
-
-    this.str = this.name;
-    if (city && state) {
-        this.str += " (" + city + ", " + state + ")";
-    }
-    else if (city) {
-        this.str += " (" + city + ")";
-    }
-    else if (state) {
-        this.str += " (" + state + ")";
-    }
-}
-
 // Using an anonomous function to avoid poluting the global scope
 (function() {
 // "use strict" tells the browser to generate more errors than normal. This
 // only applies to this function.
 "use strict";
 
-function randomIntFromInterval(min, max) {
-    // Generate a random integer in the range [min, max].
-    return Math.floor(Math.random()*(max-min+1)+min);
-}
+var data = [];
 
-function fetchDate() {
-    var d = new Date();
-    return (1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear();
-}
-
-/* Create with new Data(INITIAL_DATA).
- * Note: This is immutable! To modify, create a new Data and leave the old one
- * for the garbage collector.
- *
- * If INITIAL_DATA is a string, this formats it correctly. It can be gotten
- * with this.getDataStr().
- * If INITIAL_DATA is an object, this assumes it is formatted correctly (see
- * this.getDataObject() format), and uses that object for the data and to
- * create the string.
- *
- * this.getDataHTML() - gets an HTML string used to display a score to the user
- * this.getDataObject() - gets the internal data structure.
- *      This is an object.
- *      The key 'number' is the number representing the score.
- *      All other keys are a single character, with a value being the number of
- *          times it appears in the score string.
- *      For example, the score string "4+##" would generate:
+/*
+ * Example JSON data:
+ *  [
  *      {
- *          number: 4,
- *          '+': 1,
- *          '#': 2
+ *          "courseInfo": {
+ *              "name": "The Hill",
+ *              "city": "Devens",
+ *              "state": "MA",
+ *              "pars": {
+ *                  "out": [3, 3, 3, ...],
+ *                  "in": [3, 3, 3, ...]
+ *              },
+ *              "notes": "Great course!"
+ *          },
+ *          "scorecard": {
+ *              "players": [
+ *                  "Dave",
+ *                  "Jack",
+ *                  ...
+ *              ],
+ *              "scores": {
+ *                  "Dave": {
+ *                      "out": [
+ *                          {
+ *                              "number": 3
+ *                          },
+ *                          ...
+ *                      ],
+ *                      "in": [
+ *                          {
+ *                              "number": 3
+ *                          },
+ *                          ...
+ *                      ]
+ *                  },
+ *                  "Jack" : {
+ *                      "out": [
+ *                          {
+ *                              "number": 3
+ *                          },
+ *                          ...
+ *                      ],
+ *                      "in": [
+ *                          {
+ *                              "number": 3
+ *                          },
+ *                          ...
+ *                      ]
+ *                  },
+ *                  ...
+ *              },
+ *              "notes": "Great day, lots of sun!",
+ *          }
  *      }
+ *  ]
  */
-function Data(initData) {
-    var data_ = null;
-    var str_ = "";
 
-    this.getDataHTML = function() {
-        if (!data_ || !data_.number) {
-            return '&nbsp;';
+function sum(arr) {
+    var total = 0,
+        i     = 0,
+        len   = arr.length;
+
+    while (i < len) {
+        total += +arr[i++];
+    }
+
+    return total;
+}
+
+function courseId(course) {
+    return "course_" + trim(course.name + " " + course.city + " " +
+                            course.state).replace(/\s/g, '_');
+}
+
+function courseStr(course) {
+    var str = course.name;
+    if (course.city && course.state) {
+        str += " (" + course.city + ", " + course.state + ")";
+    } else if (course.city) {
+        str += " (" + course.city + ")";
+    } else if (course.state) {
+        str += " (" + course.state + ")";
+    }
+    return str;
+}
+
+function scoreHTML(score) {
+    if (score.number === 0) {
+        return "&nbsp;";
+    }
+    var html = score.number + '<sup>';
+    for (var i in score) {
+        if (i === 'number') {
+            continue;
         }
-
-        var str = data_.number + '<sup>';
-        for (var i in data_) {
-            if (i === 'number') {
-                continue;
-            }
-            for (var j = 0; j < data_[i]; ++j) {
-                str += i;
-            }
+        for (var j = 0; j < score[i]; ++j) {
+            html += i;
         }
-        str += '</sup>';
-        return str;
+    }
+    html += '</sup>';
+    return html;
+}
+
+function scoreStr(score) {
+    if (score.number === 0) {
+        return "";
+    }
+    var str = score.number + "";
+    for (var i in score) {
+        if (i === 'number') {
+            continue;
+        }
+        for (var j = 0; j < score[i]; ++j) {
+            str += i;
+        }
+    }
+    return str;
+}
+
+function getScoreFromInput(input) {
+    if (!input || /^\s*$/.test(input)) {
+        return {number: 0};
     }
 
-    this.getDataObject = function() {
-        return $.extend({}, data_);
-    }
-
-    this.getDataStr = function() {
-        return str_;
-    }
-
-    this.add = function(b) {
-        return Data.add(this, b);
+    var score = {
+        number: parseInt(input, 10)
     };
 
-    function setData(data) {
-        if (!data || data === ' ') {
-            data_ = null;
-            return;
+    input = input.replace(/\d/g, "");
+
+    for (var i = 0; i < input.length; ++i) {
+        var c = input.charAt(i);
+        if (/\s/.test(c)) {
+            continue;
         }
 
-        data_ = {
-            number: parseInt(data.split(' ')[0], 10)
-        };
-
-        var str = data.split(' ')[1];
-        for (var i = 0; i < str.length; ++i) {
-            var c = str.charAt(i);
-            if (c in data_) {
-                ++data_[c];
-            }
-            else {
-                data_[c] = 1;
-            }
+        if (c in score) {
+            ++score[c];
+        } else {
+            score[c] = 1;
         }
     }
 
-    function makeValidData(data) {
-        data = (data + "").replace(/\s+/g, '');
-        var num = data.replace(/[^\d]+/g, '');
-        var sym = data.replace(/[\d]+/g, '');
-        return num + ' ' + sym;
-    }
-
-    if (typeof initData === "object") {
-        data_ = $.extend({}, initData);
-        if (data_.number) {
-            str_ = data_.number + ' ';
-            for (var i in data_) {
-                if (i === 'number') {
-                    continue;
-                }
-                for (var j = 0; j < data_[i]; ++j) {
-                    str_ += i;
-                }
-            }
-        }
-        else {
-            str_ = "";
-        }
-    }
-    else {
-        str_ = makeValidData(initData);
-        setData(str_);
-    }
+    return score;
 }
 
-/* Adds a and b (which are turned into Data instances if they aren't already)
- * to get a new Data instance. This adds the scores and the numbers of each
- * symbol. */
-Data.add = function(a, b) {
-    if (!(a instanceof Data)) {
-        a = new Data(a);
-    }
-    if (!(b instanceof Data)) {
-        b = new Data(b);
-    }
-
-    var data = a.getDataObject();
-    var bData = b.getDataObject();
-
-    for (var i in bData) {
-        if (i in data) {
-            data[i] += bData[i];
-        }
-        else {
-            data[i] = bData[i];
+function addScores(a, b) {
+    var score = {};
+    for (var c in a) {
+        if (c in score) {
+            score[c] += a[c];
+        } else {
+            score[c] = a[c];
         }
     }
-
-    return new Data(data);
+    for (var c in b) {
+        if (c in score) {
+            score[c] += b[c];
+        } else {
+            score[c] = b[c];
+        }
+    }
+    score.number = a.number + b.number;
+    return score;
 }
 
-/* Create with new Input(INITIAL_DATA, UPDATER).
- * An Input is the Javascript object that represents a score field where you
- * can click on it to edit and 'un-click' it to save the new data. This is used
- * for the scores and the pars.
- *
- * INITIAL_DATA - The initial data. This is passed to new Data().
- * UPDATER - A function that is called whenever the data in this field is
- *      changed. Note that currently constructing an input will call UPDATER.
- *
- * this.$div - the jQuery element that contains the HTML that displays the
- *      score.
- * this.$input - the jQuery element that represents the input element.
- * this.$html - the jQuery element that encompasses all that's needed to be
- *      added to the DOM for this to work.
- * this.getData() - gets the Data object associated with this Input currently.
- * this.setData(DATA) - sets the data in this input to DATA. If DATA is not an
- *      instance of Data, it is converted to one.
- */
-function Input(initData, updater) {
-    this.$div = $(document.createElement('div'));
-    this.$input = $(document.createElement('input'));
-    this.$input.hide();
-    this.$html = this.$div.add(this.$input);
+function outLabelsHTML(course) {
+    var i = 1;
+    return course.courseInfo.pars.out.reduce(function(a, b) {
+        return a.add($("<td></td>").html(i++ + ""));
+    }, $()).add($("<td></td>").html("Out"));
+}
 
-    if (initData instanceof Input) {
-        initData = initData.getData();
+function inLabelsHTML(course) {
+    var i = course.courseInfo.pars.out.length;
+    return course.courseInfo.pars.in.reduce(function(a, b) {
+        return a.add($("<td></td>").html(i++ + ""));
+    }, $()).add($("<td></td>").html("In"));
+}
+
+function labelsHTML(course) {
+    var $html = $("<td></td>").html("Hole #");
+    $html = $html.add(outLabelsHTML(course));
+    if ("in" in course.courseInfo.pars) {
+        $html = $html.add(inLabelsHTML(course));
     }
-    else if (!(initData instanceof Data)) {
-        initData = new Data(initData);
-    }
-    if (!(typeof updater === "function")) {
-        updater = new Function(updater);
-    }
+    return $html.add($("<td></td>").html("Total"));
+}
 
-    var self = this;
-    var data_ = null;
+function generalInput(initData, updater) {
+    var initData = updater(initData);
+    var $div = $("<div></div>")
+        .html(initData.html);
+    var $input = $("<input />")
+        .attr('type', 'text')
+        .val(initData.val)
+        .hide();
 
-    this.getData = function() {
-        return data_;
-    }
-
-    this.setData = function(newData) {
-        if (!(newData instanceof Data)) {
-            newData = new Data(newData);
-        }
-
-        data_ = newData;
-        this.$input.val(data_.getDataStr());
-        this.$div.html(data_.getDataHTML());
-        updater();
-    }
-
-    this.$div.click(function() {
-        self.$div.hide();
-        self.$input.show();
-        self.$input.focus();
+    $div.click(function() {
+        $div.hide();
+        $input.show();
+        $input.focus();
     });
 
-    function finalize() {
-        self.$input.hide();
-        self.setData(self.$input.val());
-        self.$div.show();
+    function setData() {
+        var newData = updater($input.val());
+        $input.val(newData.val);
+        $div.html(newData.html);
     }
 
-    this.$input.blur(function() {
+    function finalize() {
+        $input.hide();
+        setData();
+        $div.show();
+    }
+
+    $input.blur(function() {
         // Since $input blurs before the click event of a $div fires, hiding
         // this input can mess up clicks on score td's that have been moved by
         // this input. 100 ms should be short enough that it's practically
@@ -284,307 +259,320 @@ function Input(initData, updater) {
         setTimeout(finalize, 100);
     });
 
-    this.$input.keypress(function(e) {
+    $input.keypress(function(e) {
         e = e || window.target;
         if (e.keyCode === 13) {
-            finalize();
+            $input.blur();
         }
     });
 
-    this.setData(initData);
+    return $div.add($input);
 }
 
-var scorecards = {};
+function parInput(par, updater) {
+    return generalInput(par + "", function(data) {
+        var i = parseInt(data, 10) + "";
+        updater(i);
+        return {
+            val: i,
+            html: i
+        };
+    });
+}
 
-/* Gets the scorecard object for the given course. Each course gets exactly 1
- * scorecard. Lazily creates and reuses the scorecards for each course.
- * this.id -  A unique scorecard id.
- * this.outPars - An array of the front pars; gotten from course.
- * this.inPars - An array of the back pars; gotten from course.
- * this.players - An array of player names.
- * this.nHoles - The number of holes.
- * this.scores - A multidimentional array of scores. Access with scores[PLAYER
- *      NUMBER][0 if front 9, 1 if back 9][HOLE] (all arrays are 0-based).
- *      Each element is an Input after this.getTable() is called.
- * this.notes - The notes about this scorecard.
- * this.getTable() - Gets the jQuery element that represents the table that
- *      should be put on the page for this scorecard.
- */
-function getScorecard(course) {
-    if (!(this instanceof getScorecard)) {
-        if (course.id in scorecards) {
-            return scorecards[course.id];
-        }
-        else {
-            return new getScorecard(course);
+function outParsHTML(course, updater) {
+    var outPars = course.courseInfo.pars.out;
+    var total = $("<td></td>");
+
+    function outUpdater() {
+        total.html(sum(outPars) + "");
+        updater();
+    }
+
+    function getUpdater(p) {
+        return function(i) {
+            outPars[p] = i;
+            outUpdater();
         }
     }
 
-    scorecards[course.id] = this;
+    var $pars = $();
+    for (var p = 0; p < outPars.length; ++p) {
+        var td = $("<td></td>").append(parInput(outPars[p], getUpdater(p)));
+        $pars = $pars.add(td);
+    }
+    return $pars.add(total);
+}
 
-    function getNewScorecardId() {
-        var d = new Date();
-        var yyyy = d.getFullYear();
-        var mm = d.getMonth() + 1;      if (mm < 10) { mm = "0" + mm; }
-        var dd = d.getDate();           if (dd < 10) { dd = "0" + dd; }
-        var HH = d.getHours();          if (HH < 10) { HH = "0" + HH; }
-        var MM = d.getMinutes();        if (MM < 10) { MM = "0" + MM; }
-        var SS = d.getSeconds();        if (SS < 10) { SS = "0" + SS; }
-        var MMM = d.getMilliseconds();
-        if (MMM < 10) { MMM = "00" + MMM; }
-        else if (MMM < 100) { MMM = "0" + MMM; }
-        var randValue = randomIntFromInterval(100000, 999999);
-        return yyyy.toString() + mm.toString() + dd.toString()
-            + "_" + HH.toString() + MM.toString() + SS.toString() + MMM.toString()
-            + "_" + randValue.toString();
+function inParsHTML(course, updater) {
+    var inPars = course.courseInfo.pars.in;
+    var total = $("<td></td>").html(sum(inPars) + "");
+
+    function inUpdater() {
+        total.html(sum(inPars) + "");
+        updater();
     }
 
-    this.id = getNewScorecardId();
-    this.outPars = course.outPars;
-    this.inPars = course.inPars;
-    this.players = [];
-    this.players.length = defNumPlayers;
-    for (var i = 0; i < this.players.length; ++i) {
-        this.players[i] = "";
-    }
-    this.nHoles = this.outPars.length + (this.inPars || []).length;
-    this.scores = [];
-    this.scores.length = this.players.length;
-    for (var i = 0; i < this.scores.length; ++i) {
-        this.scores[i] = [[]];
-        this.scores[i][0].length = this.outPars.length;
-        for (var j = 0; j < this.scores[i][0].length; ++j) {
-            this.scores[i][0][j] = "";
+    function getUpdater(p) {
+        return function(i) {
+            inPars[p] = i;
+            inUpdater();
         }
-        if (this.inPars) {
-            this.scores[i].push([]);
-            this.scores[i][1].length = this.inPars.length;
-            for (var j = 0; j < this.scores[i][1].length; ++j) {
-                this.scores[i][1][j] = "";
+    }
+
+    var $pars = $();
+    for (var p = 0; p < inPars.length; ++p) {
+        var td = $("<td></td>").append(parInput(inPars[p], getUpdater(p)));
+        $pars = $pars.add(td);
+    }
+    return $pars.add(total);
+}
+
+function parsHTML(course) {
+    var pars = course.courseInfo.pars;
+    var $pars = $("<td></td>").html("Par");
+    var total = $("<td></td>");
+
+    if ("in" in pars) {
+        var updater = function() {
+            total.html(sum(pars.out) + sum(pars.in) + "");
+        }
+    } else {
+        var updater = function() {
+            total.html(sum(pars.out));
+        }
+    }
+
+    $pars = $pars.add(outParsHTML(course, updater));
+    if ("in" in pars) {
+        $pars = $pars.add(inParsHTML(course, updater));
+    }
+    return $pars.add(total);
+}
+
+function playerPlaceholder(playerNumber) {
+    return 'Player ' + playerNumber;
+}
+
+function playerNameHTML(scorecard, playerNumber) {
+    var placeholder = playerPlaceholder(playerNumber);
+
+    function update() {
+        var prevName = scorecard.players[playerNumber - 1] || placeholder;
+        var newName = $input.val() || placeholder;
+
+        if (prevName === newName) {
+            return;
+        }
+
+        scorecard.players[playerNumber - 1] = newName;
+        scorecard.scores[newName] = scorecard.scores[prevName];
+        delete scorecard.scores[prevName];
+    }
+
+    var $input = $("<input />")
+        .val(scorecard.players[playerNumber - 1] || "")
+        .addClass('player-name')
+        .attr('placeholder', placeholder)
+        .attr('type', 'text')
+        .blur(update)
+        .keypress(function(e) {
+            e = e || window.target;
+            if (e.keyCode === 13) {
+                $(this).blur();
             }
+        });
+
+    update();
+    return $input;
+}
+
+function scoreInput(score, updater) {
+    return generalInput(scoreStr(score), function(data) {
+        var s = getScoreFromInput(data);
+        updater(s);
+        return {
+            val: scoreStr(s),
+            html: scoreHTML(s)
+        };
+    });
+}
+
+function outScoresHTML(scorecard, playerNumber, updater) {
+    var player = scorecard.players[playerNumber - 1] ||
+        playerPlaceholder(playerNumber);
+    var scores = scorecard.scores[player].out;
+    var total = $("<td></td>").addClass('sum');
+
+    function outUpdater() {
+        var s = scores.reduce(addScores, {number: 0});
+        total.html(scoreHTML(s));
+        updater();
+    }
+
+    function getUpdater(s) {
+        return function(i) {
+            scores[s] = i;
+            outUpdater();
         }
     }
-    this.notes = "";
 
-    var self = this;
+    var $scores = $();
+    for (var s = 0; s < scores.length; ++s) {
+        var td = $("<td></td>")
+            .addClass('score')
+            .append(scoreInput(scores[s], getUpdater(s)));
+        $scores = $scores.add(td);
+    }
+    return $scores.add(total);
+}
 
-    this.getTable = function() {
-        // Create header with hole numbers
-        var headerRow = $("<tr></tr>")
+function inScoresHTML(scorecard, playerNumber, updater) {
+    var player = scorecard.players[playerNumber - 1] ||
+        playerPlaceholder(playerNumber);
+    var scores = scorecard.scores[player].in;
+    var total = $("<td></td>").addClass('sum');
+
+    function inUpdater() {
+        var s = scores.reduce(addScores, {number: 0});
+        total.html(scoreHTML(s));
+        updater();
+    }
+
+    function getUpdater(s) {
+        return function(i) {
+            scores[s] = i;
+            inUpdater();
+        }
+    }
+
+    var $scores = $();
+    for (var s = 0; s < scores.length; ++s) {
+        var td = $("<td></td>")
+            .addClass('score')
+            .append(scoreInput(scores[s], getUpdater(s)));
+        $scores = $scores.add(td);
+    }
+    return $scores.add(total);
+}
+
+function scoresHTML(scorecard, playerNumber) {
+    var total = $("<td></td>").addClass('sum');
+    var player = scorecard.players[playerNumber - 1] ||
+        playerPlaceholder(playerNumber);
+    var scores = scorecard.scores;
+
+    function updater() {
+        var player = scorecard.players[playerNumber - 1] ||
+            playerPlaceholder(playerNumber);
+
+        var outScores = scores[player].out.reduce(addScores, {number: 0});
+        if ("in" in scores[player]) {
+            var inScores = scores[player].in.reduce(addScores, {number: 0});
+        }
+        total.html(scoreHTML(addScores(outScores, inScores || {number: 0})));
+    }
+
+    var $html = outScoresHTML(scorecard, playerNumber, updater);
+    if ("in" in scores[player]) {
+        $html = $html.add(inScoresHTML(scorecard, playerNumber, updater));
+    }
+    return $html.add(total);
+}
+
+function playerHTML(scorecard, playerNumber) {
+    var $html = $("<tr></tr>")
+        .append($("<td></td>")
+            .append(playerNameHTML(scorecard, playerNumber)));
+
+    $html.append(scoresHTML(scorecard, playerNumber));
+    return $html;
+}
+
+function tableHeaderHTML(course) {
+    return $("<thead></thead>")
+        .append($("<tr></tr>")
             .attr('id', 'header-row')
-            .append($("<td></td>").html("Hole #"));
-        for (var i = 1; i <= this.outPars.length; ++i) {
-            headerRow.append($("<td></td>").html(i + ""));
-        }
-        headerRow.append($("<td></td>").html("Out"));
-        if (this.inPars) {
-            for (var i = 1; i <= this.inPars.length; ++i) {
-                headerRow.append($("<td></td>").html((i + this.outPars.length) +
-                    ""));
-            }
-            headerRow.append($("<td></td>").html("In"));
-        }
-        headerRow.append($("<td></td>").html("Total"));
-
-        // Create row with pars
-        var parRow = $("<tr></tr>")
+            .append(labelsHTML(course)))
+        .append($("<tr></tr>")
             .attr('id', 'par-row')
-            .append($("<td></td>").html("Par"));
-        var outParTotal = $("<td></td>");
-        var inParTotal = $("<td></td>");
-        var parTotal = $("<td></td>");
+            .append(parsHTML(course)));
+}
 
-        // Adds the data of scores a and b.
-        function addScores(a, b) {
-            return Data.add(a instanceof Input ? a.getData() : a,
-                            b instanceof Input ? b.getData() : b);
-        }
+function tableBodyHTML(course) {
+    var $html = $("<tbody>");
+    for (var p = 1; p <= course.scorecard.players.length; ++p) {
+        $html.append(playerHTML(course.scorecard, p));
+    }
+    return $html;
+}
 
-        // Helper functions
-        function outParTotalData() {
-            return self.outPars.reduce(addScores);
-        }
-        function inParTotalData() {
-            return self.inPars.reduce(addScores);
-        }
-        function parTotalData() {
-            return self.inPars ? Data.add(outParTotalData(), inParTotalData())
-                               : outParTotalData();
-        }
-        function updateOutParTotal() {
-            outParTotal.html(outParTotalData().getDataHTML());
-        }
-        function updateInParTotal() {
-            inParTotal.html(inParTotalData().getDataHTML());
-        }
-        function updateParTotal() {
-            parTotal.html(parTotalData().getDataHTML());
-        }
+function tableFooterHTML(course) {
+    // 2 == Player names + Out total + Total
+    var pars = course.courseInfo.pars;
+    var colspan = pars.out.length + 3;
+    if ("in" in pars) {
+        colspan += pars.in.length + 1;
+    }
+    colspan -= 2;
 
-        for (var i = 0; i < this.outPars.length; ++i) {
-            this.outPars[i] = new Input(this.outPars[i],
-                                        function() {
-                                            updateOutParTotal();
-                                            updateParTotal();
-                                        });
-            parRow.append($("<td></td>").append(this.outPars[i].$html));
-        }
-        parRow.append(outParTotal);
+    return $("<tfoot>").append([
+        $("<tr></tr>")
+            .attr('id', 'notes_row')
+            .append([
+                $("<td></td>")
+                    .attr('id', 'course_notes_label')
+                    .append($("<label></label>")
+                        .attr('for', 'course_notes')
+                        .html('Notes')),
+                $("<td></td>")
+                    .attr('id', 'course_notes')
+                    .attr('colspan', colspan - 1)
+                    .append($("<textarea></textarea>")
+                        .val(course.scorecard.notes)
+                        .blur(function() {
+                            course.scorecard.notes = $(this).val();
+                        })
+                        .attr('rows', '2')
+                        .attr('cols', '72')
+                        .attr('placeholder', 'Enter any memorable thoughts' +
+                              ' about the course or round')),
+                $("<td></td>")
+                    .attr('id', 'add-player')
+                    .attr('colspan', 2)
+                    .append($("<button></button>")
+                        .attr('type', 'button')
+                        .text('Add Player')
+                        .click(function() {
+                            addPlayer();
+                        }))
+            ]),
+        $("<tr></tr>")
+            .attr('id', 'scorecard-row')
+            .append($("<td></td>")
+                .attr('colspan', colspan + 2)
+                .html('Scorecard ID: ')
+                .append($("<span></span>")
+                    .attr('id', 'scorecard-id')
+                    .html(courseId(course.courseInfo) + "")))
+    ]);
+}
 
-        if (this.inPars) {
-            for (var i = 0; i < this.inPars.length; ++i) {
-                this.inPars[i] = new Input(this.inPars[i],
-                                           function() {
-                                               updateInParTotal();
-                                               updateParTotal();
-                                           });
-                parRow.append($("<td></td>").append(this.inPars[i].$html));
-            }
-            parRow.append(inParTotal);
-        }
-
-        parRow.append(parTotal);
-
-        // It can't hurt to make sure they're updated.
-        updateOutParTotal();
-        updateInParTotal();
-        updateParTotal();
-
-        var tbody = $("<tbody></tbody>");
-
-        for (var i = 0; i < this.players.length; ++i) {
-            // Create a new scope for all player variables, including the
-            // player index
-            (function(i) {
-                var playerRow = $("<tr></tr>").append(
-                    $("<td></td>").append(
-                        $("<input />")
-                            .attr('placeholder', 'Player ' + (i + 1))
-                            .attr('type', 'text')
-                            .addClass('player-name')
-                            .val(self.players[i])
-                            .blur(function() {
-                                self.players[i] = $(this).val();
-                            })));
-                var outPlayerTotal = $("<td></td>").addClass('sum');
-                var inPlayerTotal = $("<td></td>").addClass('sum');
-                var playerTotal = $("<td></td>").addClass('sum');
-
-                // Helper functions
-                function outPlayerTotalData() {
-                    return self.scores[i][0].reduce(addScores, new Data(""));
-                }
-                function inPlayerTotalData() {
-                    return self.scores[i][1].reduce(addScores, new Data(""));
-                }
-                function playerTotalData() {
-                    return self.inPars ? Data.add(outPlayerTotalData(), inPlayerTotalData())
-                                       : outPlayerTotalData();
-                }
-                function updateOutPlayerTotal() {
-                    outPlayerTotal.html(outPlayerTotalData().getDataHTML());
-                }
-                function updateInPlayerTotal() {
-                    inPlayerTotal.html(inPlayerTotalData().getDataHTML());
-                }
-                function updatePlayerTotal() {
-                    playerTotal.html(playerTotalData().getDataHTML());
-                }
-
-                for (var j = 0; j < self.outPars.length; ++j) {
-                    self.scores[i][0][j] = new Input(self.scores[i][0][j],
-                                                     function() {
-                                                         updateOutPlayerTotal();
-                                                         updatePlayerTotal();
-                                                     });
-                    playerRow.append($("<td></td>")
-                        .addClass('score')
-                        .append(self.scores[i][0][j].$html));
-                }
-                playerRow.append(outPlayerTotal);
-
-                if (self.inPars) {
-                    for (var j = 0; j < self.inPars.length; ++j) {
-                        self.scores[i][1][j] = new Input(self.scores[i][1][j],
-                                                         function() {
-                                                             updateInPlayerTotal();
-                                                             updatePlayerTotal();
-                                                         });
-                        playerRow.append($("<td></td>")
-                            .addClass('score')
-                            .append(self.scores[i][1][j].$html));
-                    }
-                    playerRow.append(inPlayerTotal);
-                }
-
-                playerRow.append(playerTotal);
-
-                updateOutPlayerTotal();
-                updateInPlayerTotal();
-                updatePlayerTotal();
-
-                tbody.append(playerRow);
-            })(i);
-        }
-
-        // 3 == Player names + Out total + Total
-        var colspan = this.nHoles + (this.inPars ? 4 : 3);
-
-        return $("<table></table>")
-            .attr('id', 'scorecard')
-            .append(
-                $("<thead></thead>")
-                    .append(headerRow)
-                    .append(parRow))
-            .append(tbody)
-            .append($("<tfoot>").append([
-                $("<tr></tr>")
-                    .attr('id', 'notes_row')
-                    .append([
-                        $("<td></td>")
-                            .attr('id', 'course_notes_label')
-                            .append(
-                                $("<label></label>")
-                                    .attr('for', 'course_notes')
-                                    .html('Notes')),
-                        $("<td></td>")
-                            .attr('id', 'course_notes')
-                            .attr('colspan', colspan - 1)
-                            .append(
-                                $("<textarea></textarea>")
-                                    .val(this.notes)
-                                    .blur(function() {
-                                        self.notes = $(this).val();
-                                    })
-                                    .attr('rows', '2')
-                                    .attr('cols', '72')
-                                    .attr('placeholder',
-                                        'Enter any memorable thoughts about the course or round'))
-                    ]),
-                $("<tr></tr>")
-                    .attr('id', 'scorecard-row')
-                    .append($("<td></td>")
-                        .attr('colspan', colspan)
-                        .html('Scorecard ID: ')
-                        .append(
-                            $("<span></span>")
-                                .attr('id', 'scorecard-id')
-                                .html(this.id + "")))
-            ]));
-    };
+function tableHTML(course) {
+    var $html = $("<table></table>")
+        .attr('id', 'scorecard')
+        .append(tableHeaderHTML(course))
+        .append(tableFooterHTML(course))
+        .append(tableBodyHTML(course));
+    return $html;
 }
 
 function getUserInput(p) {
     return prompt(p, "");
 }
 
-/* Sets the new course to course. Prompts the user for info if course ===
- * otherCourse.
- */
-function setCourse(course) {
-    currentCourse = course;
-    $("#scorecard").replaceWith(getScorecard(course).getTable());
-    if (course === otherCourse) {
+function setCourse(courseNumber) {
+    if (courseNumber === otherCourse) {
         var name = getUserInput("Please enter the name of this course.");
         if (name === null) {
             return;
@@ -597,31 +585,82 @@ function setCourse(course) {
         if (state === null) {
             return;
         }
-        var newCourse = new Course(name, city, state, course.outPars, course.inPars);
-        courses.push(newCourse);
-        setCourse(newCourse);
-        $("#select_course")
-            .prepend(
-                $("<option></option>")
-                    .prop('selected', true)
-                    .attr('id', newCourse.id)
-                    .html(newCourse.str));
+        var newCourse = {
+            name: name,
+            city: city,
+            state: state,
+            pars: {
+                out: [3, 3, 3, 3, 3, 3, 3, 3, 3],
+                in: [3, 3, 3, 3, 3, 3, 3, 3, 3]
+            }
+        };
+        setCourse(addCourse(newCourse));
+    } else {
+        $("#scorecard").replaceWith(tableHTML(data[courseNumber]));
+        currentCourse = courseNumber;
     }
+}
+
+function addPlayer(course) {
+    course = course || data[currentCourse];
+    var scorecard = course.scorecard;
+    var playerNumber = scorecard.players.length + 1;
+    var placeholder = playerPlaceholder(playerNumber);
+    scorecard.players.push("");
+
+    function getEmptyScore(par) {
+        return {number: 0};
+    }
+
+    scorecard.scores[placeholder] = {
+        out: course.courseInfo.pars.out.map(getEmptyScore)
+    };
+    if ("in" in course.courseInfo.pars) {
+        scorecard.scores[placeholder].in =
+            course.courseInfo.pars.in.map(getEmptyScore);
+    }
+
+    if (course === data[currentCourse]) {
+        setCourse(currentCourse);
+    }
+}
+
+function addCourse(info) {
+    var course = {
+        courseInfo: info,
+        scorecard: {
+            players: [],
+            scores: {}
+        }
+    };
+
+    addPlayer(course);
+
+    $("#select_course")
+        .prepend($("<option></option>")
+            .attr('id', courseId(course))
+            .html(courseStr(course)));
+
+    data.push(course);
+    return data.length - 1;
 }
 
 /* Creates the course selection dropdown and label. */
 function createSelect() {
     var options = [];
-    for (var i = 0; i < courses.length; ++i) {
+
+    for (var i = 0; i < data.length; ++i) {
+        var course = data[i];
         var option = $("<option></option>")
-            .attr('id', courses[i].id)
-            .html(courses[i].str);
-        if (defCourse === courses[i]) {
+            .attr('id', courseId(course.courseInfo))
+            .html(courseStr(course.courseInfo));
+        if (i === defCourse) {
             option.prop('selected', true);
         }
         options.push(option);
     }
-    $("#select").append(
+
+    $("#select").append([
         $("<label></label>")
             .attr('id', 'select_course_label')
             .attr('for', 'select_course')
@@ -629,16 +668,23 @@ function createSelect() {
         $("<select></select>")
             .attr('id', 'select_course')
             .attr('title', 'Click to select a predefined course')
-            .change(function selectChange() {
-                        var str = $(this).val();
-                        for (var i = 0; i < courses.length; ++i) {
-                            if (courses[i].str === str) {
-                                setCourse(courses[i]);
-                                return;
-                            }
-                        }
-                    })
-            .append(options));
+            .change(function() {
+                var str = $(this).val();
+                for (var i = 0; i < data.length; ++i) {
+                    var course = data[i];
+                    if (courseStr(course.courseInfo) === str) {
+                        setCourse(i);
+                        return;
+                    }
+                }
+            })
+            .append(options)
+    ]);
+}
+
+function fetchDate() {
+    var d = new Date();
+    return (1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear();
 }
 
 function setDate() {
@@ -653,5 +699,9 @@ $(function() {
     createSelect();
     setCourse(defCourse);
 });
+
+window.addCourse = function(info) {
+    addCourse(info);
+}
 
 })();

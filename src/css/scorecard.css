@@ -111,6 +111,10 @@ noscript {
     height: 5em;
 }
 
+#add-player {
+    background-color: #CCFFFF;
+}
+
 #scorecard-row {
     background-color: #CCC;
 }
