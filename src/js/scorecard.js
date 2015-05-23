@@ -540,21 +540,31 @@ function tableFooterHTML(course) {
                 $("<td></td>")
                     .attr('id', 'add-player')
                     .attr('colspan', 2)
-                    .append($("<button></button>")
-                        .attr('type', 'button')
-                        .text('Add Player')
-                        .click(function() {
-                            addPlayer();
-                        }))
-            ]),
-        $("<tr></tr>")
-            .attr('id', 'scorecard-row')
-            .append($("<td></td>")
-                .attr('colspan', colspan + 2)
-                .html('Scorecard ID: ')
-                .append($("<span></span>")
-                    .attr('id', 'scorecard-id')
-                    .html(courseId(course.courseInfo) + "")))
+                    .append([
+                        $("<div></div>").append($("<button></button>")
+                            .attr('type', 'button')
+                            .text('Add Player')
+                            .click(function() {
+                                addPlayer();
+                            })),
+                        $("<div></div>").append($("<button></button>")
+                            .attr('type', 'button')
+                            .text('Save')
+                            .click(function() {
+                                $.post("save.php", {
+                                    json: JSON.stringify(data[currentCourse])
+                                });
+                            }))
+                    ])
+            ])
+        // $("<tr></tr>")
+        //     .attr('id', 'scorecard-row')
+        //     .append($("<td></td>")
+        //         .attr('colspan', colspan + 2)
+        //         .html('Scorecard ID: ')
+        //         .append($("<span></span>")
+        //             .attr('id', 'scorecard-id')
+        //             .html(courseId(course.courseInfo) + "")))
     ]);
 }
 
