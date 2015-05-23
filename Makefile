@@ -1,8 +1,7 @@
-SRC = $(wildcard src/*)
+SRC = Makefile $(shell find src/ -type f)
 
 site: $(SRC)
-	sudo cp -r src/* /var/www/html/
-	xdg-open http://localhost/testing.php >/dev/null 2>&1 &
+	xdg-open src/main.html >/dev/null 2>&1
 
 tags: $(SRC)
-	ctags -R --exclude=jquery src/
+	ctags -R src/ Makefile
