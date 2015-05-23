@@ -209,7 +209,7 @@ function outLabelsHTML(course) {
 }
 
 function inLabelsHTML(course) {
-    var i = course.courseInfo.pars.out.length;
+    var i = course.courseInfo.pars.out.length + 1;
     return course.courseInfo.pars.in.reduce(function(a, b) {
         return a.add($("<td></td>").html(i++ + ""));
     }, $()).add($("<td></td>").html("In"));
