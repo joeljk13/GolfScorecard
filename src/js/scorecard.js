@@ -271,11 +271,11 @@ function generalInput(initData, updater) {
 
 function parInput(par, updater) {
     return generalInput(par + "", function(data) {
-        var i = parseInt(data, 10) + "";
+        var i = parseInt(data, 10);
         updater(i);
         return {
-            val: i,
-            html: i
+            val: i + "",
+            html: i + ""
         };
     });
 }
