@@ -122,27 +122,29 @@ function courseStr(course) {
 }
 
 function scoreHTML(score) {
-    if (score.number === 0) {
-        return "&nbsp;";
+    var number = "", sym = "";
+    if (score.number || score.number === 0) {
+        number += score.number;
     }
-    var html = score.number + '<sup>';
     for (var i in score) {
         if (i === 'number') {
             continue;
         }
         for (var j = 0; j < score[i]; ++j) {
-            html += i;
+            sym += i;
         }
     }
-    html += '</sup>';
-    return html;
+    if (number === "" && sym === "") {
+        return "&nbsp;"
+    }
+    return number + '<sup>' + sym + '</sup>';
 }
 
 function scoreStr(score) {
-    if (score.number === 0) {
-        return "";
+    var str = "";
+    if (score.number || score.number === 0) {
+        str += score.number;
     }
-    var str = score.number + "";
     for (var i in score) {
         if (i === 'number') {
             continue;
@@ -155,22 +157,22 @@ function scoreStr(score) {
 }
 
 function getScoreFromInput(input) {
-    if (!input || /^\s*$/.test(input)) {
-        return {number: 0};
+    var score = {};
+
+    if (/\d/.test(input)) {
+        var digits;
+        score.number = 0;
+        while (digits = /\d+/.exec(input)) {
+            digits = digits[0];
+            score.number += parseInt(digits, 10);
+            input = input.replace(digits, '');
+        }
     }
 
-    var score = {
-        number: parseInt(input, 10)
-    };
-
-    input = input.replace(/\d/g, "");
+    input = input.replace(/\s/g, '');
 
     for (var i = 0; i < input.length; ++i) {
         var c = input.charAt(i);
-        if (/\s/.test(c)) {
-            continue;
-        }
-
         if (c in score) {
             ++score[c];
         } else {
@@ -197,7 +199,7 @@ function addScores(a, b) {
             score[c] = b[c];
         }
     }
-    score.number = a.number + b.number;
+    score.number = (a.number || 0) + (b.number || 0);
     return score;
 }
 
@@ -619,7 +621,7 @@ function addPlayer(course) {
     scorecard.players.push("");
 
     function getEmptyScore(par) {
-        return {number: 0};
+        return {};
     }
 
     scorecard.scores[placeholder] = {
