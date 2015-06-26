@@ -243,6 +243,9 @@ function generalInput(initData, updater) {
 
     function setData() {
         var newData = updater($input.val());
+        if (newData === null) {
+            return;
+        }
         $input.val(newData.val);
         $div.html(newData.html);
     }
@@ -273,6 +276,10 @@ function generalInput(initData, updater) {
 
 function parInput(par, updater) {
     return generalInput(par + "", function(data) {
+        data = data.replace(/\D/g, '');
+        if (!data) {
+            return null;
+        }
         var i = parseInt(data, 10);
         updater(i);
         return {
