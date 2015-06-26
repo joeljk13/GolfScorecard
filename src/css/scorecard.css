@@ -111,9 +111,17 @@ noscript {
     height: 5em;
 }
 
-#add-player {
+#buttons {
     background-color: #CCFFFF;
     text-align: center;
+}
+
+#add-player {
+    margin-bottom: 0.5em;
+}
+
+#save {
+    margin-top: 0.5em;
 }
 
 #scorecard-row {

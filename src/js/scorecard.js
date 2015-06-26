@@ -540,17 +540,19 @@ function tableFooterHTML(course) {
                         .attr('placeholder', 'Enter any memorable thoughts' +
                               ' about the course or round')),
                 $("<td></td>")
-                    .attr('id', 'add-player')
+                    .attr('id', 'buttons')
                     .attr('colspan', 2)
                     .append([
                         $("<div></div>").append($("<button></button>")
                             .attr('type', 'button')
+                            .attr('id', 'add-player')
                             .text('Add Player')
                             .click(function() {
                                 addPlayer();
                             })),
                         $("<div></div>").append($("<button></button>")
                             .attr('type', 'button')
+                            .attr('id', 'save')
                             .text('Save')
                             .click(function() {
                                 $.post("save.php", {
