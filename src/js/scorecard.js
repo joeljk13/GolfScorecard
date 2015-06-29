@@ -712,6 +712,22 @@ function setDate() {
     $("#date").html(fetchDate());
 }
 
+function newScorecardID() {
+    var d = new Date();
+    var yyyy = d.getFullYear();
+    var mm = d.getMonth() + 1;      if (mm < 10) { mm = "0" + mm; }
+    var dd = d.getDate();           if (dd < 10) { dd = "0" + dd; }
+    var HH = d.getHours();          if (HH < 10) { HH = "0" + HH; }
+    var MM = d.getMinutes();        if (MM < 10) { MM = "0" + MM; }
+    var SS = d.getSeconds();        if (SS < 10) { SS = "0" + SS; }
+    var MMM = d.getMilliseconds();
+    if (MMM < 10) { MMM = "00" + MMM; }
+    else if (MMM < 100) { MMM = "0" + MMM; }
+    var randValue = randomIntFromInterval(100000, 999999);
+    var newID = yyyy + mm + dd + "_" + HH + MM + SS + MMM + "_" + randValue;
+    return newID;
+}
+
 $(function() {
     // After the page has been loaded, run these javascript commands to set up
     // any part of the page that needs to be created dynamically.
