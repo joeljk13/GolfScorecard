@@ -16,7 +16,7 @@ function trimr(str) {
     return str.replace(/\s+$/, '');
 }
 
-/* Replaces any occurances of multiple whitespace characters in a row with a
+/* Replaces any occurrences of multiple whitespace characters in a row with a
  * single space. */
 function trimm(str) {
     return str.replace(/\s+/g, ' ');
@@ -27,7 +27,7 @@ function trim(str) {
     return trimm(triml(trimr(str)));
 }
 
-// Using an anonomous function to avoid poluting the global scope
+// Using an anonymous function to avoid polluting the global scope.
 (function() {
 // "use strict" tells the browser to generate more errors than normal. This
 // only applies to this function.
