@@ -1,4 +1,4 @@
-/*!
+/*
  * scorecard.js
  * JavaScript for the GolfScorecard web site.
  * Uses jQuery.

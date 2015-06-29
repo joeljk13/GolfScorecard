@@ -12,7 +12,7 @@
 <body>
     <div>
         <span id="program_name">Golf Scorecard</span>
-        <span id="program_version">Version 0.9</span>
+        <span id="program_version">Version 0.9.1</span>
         <span id="date_span">
             Date:
             <span id="date"></span>
@@ -39,60 +39,7 @@
 
 <script src="js/jquery/jquery-2.1.1.min.js"></script>
 <script src="js/scorecard.js"></script>
-<script>
-var defCourse = 0, otherCourse = -1, currentCourse = defCourse;
-// Define pre-defined courses; the default one will be set once the DOM has 
-// loaded.
-addCourse({
-    name: "The General",
-    city: "Devens",
-    state: "MA",
-    pars: {
-        out: [3, 3, 3, 3, 4, 3, 3, 3, 3],
-        in: [3, 4, 3, 3, 3, 3, 3, 3, 3],
-    }
-});
-
-addCourse({
-    name: "The Hill",
-    city: "Devens",
-    state: "MA",
-    pars: {
-        out: [3, 3, 3, 3, 3, 3, 3, 3, 3],
-        in: [3, 3, 3, 3, 3, 3, 3, 3, 3]
-    }
-});
-
-addCourse({
-    name: "Muldoon Park",
-    city: "Pelham",
-    state: "NH",
-    pars: {
-        out: [3, 3, 3, 3, 3, 4, 3, 3, 3],
-        in: [3, 3, 3, 3, 3, 3, 3, 4, 3]
-    }
-});
-
-addCourse({
-    name: "Coggshall Park",
-    city: "Fitchburg",
-    state: "MA",
-    pars: {
-        out: [3, 3, 3, 3, 3, 3, 4, 3, 3],
-        in: [3, 3, 3, 3, 3, 3, 3, 4, 3]
-    }
-});
-
-addCourse({
-    name: "Typical Minigolf Course",
-    city: "",
-    state: "",
-    pars: {
-        out: [2, 2, 2, 2, 2, 2, 2, 2, 2],
-        in: [2, 2, 2, 2, 2, 2, 2, 2, 2]
-    }
-});
-</script>
+<script src="js/courses.js"></script>
 <noscript>You must have Javascript enabled for this to work.</noscript>
 </body>
 </html>
