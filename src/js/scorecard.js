@@ -578,7 +578,7 @@ function tableFooterHTML(course) {
             .attr('id', 'scorecard-id-row')
             .append($("<td></td>")
                 .attr('colspan', colspan + 2)
-                .html('Scorecard ID: &nbsp; ')
+                .html('Scorecard ID: ')
                 .append($("<span></span>")
                     .attr('id', 'scorecard-id')
                     .html(newScorecardID())))
