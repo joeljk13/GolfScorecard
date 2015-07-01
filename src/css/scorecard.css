@@ -18,50 +18,48 @@ noscript {
     padding: 2px;
 }
 
-#program_name {
+#program-name {
     font-size: x-large;
     font-weight: bold;
 }
 
-#program_version {
+#program-version {
     font-size: smaller;
     font-style: italic;
 }
 
-#date_span {
+#date-span {
     float: right;
 }
 
-#select {
+#choose-course {
     margin-top: 1em;
 }
 
 #scorecard {
     margin-top: 1em;
     border: 2px solid black;
+    text-align: center;
 }
 
-#header-row {
+#labels-row {
     font-weight: bold;
-    text-align: center;
     background-color: black;
     color: white;
 }
 
 #par-row {
     font-weight: bold;
-    text-align: center;
     background-color: #FFCC66;
 }
 
-#par-row > td {
-    font-weight: bold;
-    text-align: center;
-    background-color: #FFCC66;
-}
-
-#par-row input {
+.score > input, .par > input {
     width: 4em;
+}
+
+.score > div, .par > div {
+    width: 100%;
+    height: 100%;
 }
 
 #scorecard td {
@@ -69,7 +67,7 @@ noscript {
     border: 1px solid black;
 }
 
-.player-name {
+.player-name-input {
     border: none;
     padding-left: 4px;
     padding-right: 4px;
@@ -77,54 +75,44 @@ noscript {
 }
 
 .score {
-    text-align: center;
     min-width: 20px;
     border-color: gray !important;
 }
 
-.score > input {
-    width: 4em;
-}
-
-.sum {
-    text-align: center;
+.score-sum {
     font-weight: bold;
     min-width: 40px;
     border-color: gray !important;
     background-color: #D8D8D8;
 }
 
-#course_notes_label {
+#course-notes-label {
     font-weight: bold;
-    text-align: center;
     background-color: #CCFFFF;
 }
 
-#course_notes {
+#course-notes {
     border: none !important;
     background-color: #CCFFFF;
 }
 
-#course_notes > textarea {
+#course-notes-input {
     border: 1px solid black;
     resize: none;
     height: 5em;
 }
 
-#buttons {
+#buttons-row {
     background-color: #CCFFFF;
-    text-align: center;
+    width: 100%;
+    vertical-align: middle;
 }
 
-#add-player {
-    margin-bottom: 0.5em;
+#save-button {
+    width: 96%;
 }
 
-#save {
-    margin-top: 0.5em;
-}
-
-#scorecard-row {
+#scorecard-id-row {
     background-color: #CCFFFF;
     text-align: left;
 }
@@ -144,11 +132,4 @@ noscript {
     margin-top: 1em;
     font-size: smaller;
     font-style: italic;
-}
-
-#buttons_row {
-    background-color: #CCFFFF;
-    text-align: center;
-    width: 100px;
-    vertical-align: middle;
 }

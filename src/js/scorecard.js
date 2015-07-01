@@ -291,7 +291,7 @@ function parInput(par, updater) {
 
 function outParsHTML(course, updater) {
     var outPars = course.courseInfo.pars.out;
-    var total = $("<td></td>");
+    var total = $("<td></td>").addClass('par-sum');
 
     function outUpdater() {
         total.html(sum(outPars) + "");
@@ -307,7 +307,9 @@ function outParsHTML(course, updater) {
 
     var $pars = $();
     for (var p = 0; p < outPars.length; ++p) {
-        var td = $("<td></td>").append(parInput(outPars[p], getUpdater(p)));
+        var td = $("<td></td>")
+            .addClass('par')
+            .append(parInput(outPars[p], getUpdater(p)));
         $pars = $pars.add(td);
     }
     return $pars.add(total);
@@ -315,7 +317,7 @@ function outParsHTML(course, updater) {
 
 function inParsHTML(course, updater) {
     var inPars = course.courseInfo.pars.in;
-    var total = $("<td></td>").html(sum(inPars) + "");
+    var total = $("<td></td>").addClass('par-sum');
 
     function inUpdater() {
         total.html(sum(inPars) + "");
@@ -331,7 +333,9 @@ function inParsHTML(course, updater) {
 
     var $pars = $();
     for (var p = 0; p < inPars.length; ++p) {
-        var td = $("<td></td>").append(parInput(inPars[p], getUpdater(p)));
+        var td = $("<td></td>")
+            .addClass('par')
+            .append(parInput(inPars[p], getUpdater(p)));
         $pars = $pars.add(td);
     }
     return $pars.add(total);
@@ -340,7 +344,7 @@ function inParsHTML(course, updater) {
 function parsHTML(course) {
     var pars = course.courseInfo.pars;
     var $pars = $("<td></td>").html("Par");
-    var total = $("<td></td>");
+    var total = $("<td></td>").addClass('par-sum');
 
     if ("in" in pars) {
         var updater = function() {
@@ -381,7 +385,7 @@ function playerNameHTML(scorecard, playerNumber) {
 
     var $input = $("<input />")
         .val(scorecard.players[playerNumber - 1] || "")
-        .addClass('player-name')
+        .addClass('player-name-input')
         .attr('placeholder', placeholder)
         .attr('type', 'text')
         .blur(update)
@@ -411,7 +415,7 @@ function outScoresHTML(scorecard, playerNumber, updater) {
     var player = scorecard.players[playerNumber - 1] ||
         playerPlaceholder(playerNumber);
     var scores = scorecard.scores[player].out;
-    var total = $("<td></td>").addClass('sum');
+    var total = $("<td></td>").addClass('score-sum');
 
     function outUpdater() {
         var s = scores.reduce(addScores, {number: 0});
@@ -440,7 +444,7 @@ function inScoresHTML(scorecard, playerNumber, updater) {
     var player = scorecard.players[playerNumber - 1] ||
         playerPlaceholder(playerNumber);
     var scores = scorecard.scores[player].in;
-    var total = $("<td></td>").addClass('sum');
+    var total = $("<td></td>").addClass('score-sum');
 
     function inUpdater() {
         var s = scores.reduce(addScores, {number: 0});
@@ -466,7 +470,7 @@ function inScoresHTML(scorecard, playerNumber, updater) {
 }
 
 function scoresHTML(scorecard, playerNumber) {
-    var total = $("<td></td>").addClass('sum');
+    var total = $("<td></td>").addClass('score-sum');
     var player = scorecard.players[playerNumber - 1] ||
         playerPlaceholder(playerNumber);
     var scores = scorecard.scores;
@@ -501,7 +505,7 @@ function playerHTML(scorecard, playerNumber) {
 function tableHeaderHTML(course) {
     return $("<thead></thead>")
         .append($("<tr></tr>")
-            .attr('id', 'header-row')
+            .attr('id', 'labels-row')
             .append(labelsHTML(course)))
         .append($("<tr></tr>")
             .attr('id', 'par-row')
@@ -527,44 +531,40 @@ function tableFooterHTML(course) {
 
     return $("<tfoot>").append([
         $("<tr></tr>")
-            .attr('id', 'buttons_row')
+            .attr('id', 'buttons-row')
             .append([
                 $("<td></td>")
-                    .attr('id', 'player_buttons')
-                    .append($("<div></div>")
-                        .append($("<button></button>")
-                            .attr('type', 'button')
-                            .attr('id', 'add-player')
-                            .text('Add Player')
-                            .click(function() {
-                                addPlayer();
-                            }))),
-                $("<td></td>")
-                    .attr('id', 'save_button')
-                    .attr('colspan', colspan + 2)
-                    .append($("<div></div>").append($("<button></button>")
+                    .attr('id', 'player-buttons')
+                    .append($("<button></button>")
                         .attr('type', 'button')
-                        .attr('id', 'save')
-                        .attr('width', '96%')
+                        .text('Add Player')
+                        .click(function() {
+                            addPlayer();
+                        })),
+                $("<td></td>")
+                    .attr('colspan', colspan + 2)
+                    .append($("<button></button>")
+                        .attr('type', 'button')
+                        .attr('id', 'save-button')
                         .text('Save')
                         .click(function() {
                             $.post("save.php", {
                                 json: JSON.stringify(data[currentCourse])
                             });
-                        })))
+                        }))
             ]),
         $("<tr></tr>")
-            .attr('id', 'notes_row')
             .append([
                 $("<td></td>")
-                    .attr('id', 'course_notes_label')
+                    .attr('id', 'course-notes-label')
                     .append($("<label></label>")
-                        .attr('for', 'course_notes')
+                        .attr('for', 'course-notes')
                         .html('Notes')),
                 $("<td></td>")
-                    .attr('id', 'course_notes')
+                    .attr('id', 'course-notes')
                     .attr('colspan', colspan + 1)
                     .append($("<textarea></textarea>")
+                        .attr('id', 'course-notes-input')
                         .val(course.scorecard.notes)
                         .blur(function() {
                             course.scorecard.notes = $(this).val();
@@ -575,7 +575,7 @@ function tableFooterHTML(course) {
                               ' about the course or round'))
             ]),
         $("<tr></tr>")
-            .attr('id', 'scorecard-row')
+            .attr('id', 'scorecard-id-row')
             .append($("<td></td>")
                 .attr('colspan', colspan + 2)
                 .html('Scorecard ID: &nbsp; ')
@@ -663,7 +663,7 @@ function addCourse(info) {
 
     addPlayer(course);
 
-    $("#select_course")
+    $("#select-course")
         .prepend($("<option></option>")
             .attr('id', courseId(course))
             .html(courseStr(course)));
@@ -687,13 +687,13 @@ function createSelect() {
         options.push(option);
     }
 
-    $("#select").append([
+    $("#choose-course").append([
         $("<label></label>")
-            .attr('id', 'select_course_label')
-            .attr('for', 'select_course')
+            .attr('id', 'select-course-label')
+            .attr('for', 'select-course')
             .html('Select Course: '),
         $("<select></select>")
-            .attr('id', 'select_course')
+            .attr('id', 'select-course')
             .attr('title', 'Click to select a predefined course')
             .change(function() {
                 var str = $(this).val();
