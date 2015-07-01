@@ -527,6 +527,33 @@ function tableFooterHTML(course) {
 
     return $("<tfoot>").append([
         $("<tr></tr>")
+            .attr('id', 'buttons_row')
+            .append([
+                $("<td></td>")
+                    .attr('id', 'player_buttons')
+                    .append($("<div></div>")
+                        .append($("<button></button>")
+                            .attr('type', 'button')
+                            .attr('id', 'add-player')
+                            .text('Add Player')
+                            .click(function() {
+                                addPlayer();
+                            }))),
+                $("<td></td>")
+                    .attr('id', 'save_button')
+                    .attr('colspan', colspan + 2)
+                    .append($("<div></div>").append($("<button></button>")
+                        .attr('type', 'button')
+                        .attr('id', 'save')
+                        .attr('width', '96%')
+                        .text('Save')
+                        .click(function() {
+                            $.post("save.php", {
+                                json: JSON.stringify(data[currentCourse])
+                            });
+                        })))
+            ]),
+        $("<tr></tr>")
             .attr('id', 'notes_row')
             .append([
                 $("<td></td>")
@@ -536,7 +563,7 @@ function tableFooterHTML(course) {
                         .html('Notes')),
                 $("<td></td>")
                     .attr('id', 'course_notes')
-                    .attr('colspan', colspan - 1)
+                    .attr('colspan', colspan + 1)
                     .append($("<textarea></textarea>")
                         .val(course.scorecard.notes)
                         .blur(function() {
@@ -545,37 +572,16 @@ function tableFooterHTML(course) {
                         .attr('rows', '2')
                         .attr('cols', '72')
                         .attr('placeholder', 'Enter any memorable thoughts' +
-                              ' about the course or round')),
-                $("<td></td>")
-                    .attr('id', 'buttons')
-                    .attr('colspan', 2)
-                    .append([
-                        $("<div></div>").append($("<button></button>")
-                            .attr('type', 'button')
-                            .attr('id', 'add-player')
-                            .text('Add Player')
-                            .click(function() {
-                                addPlayer();
-                            })),
-                        $("<div></div>").append($("<button></button>")
-                            .attr('type', 'button')
-                            .attr('id', 'save')
-                            .text('Save')
-                            .click(function() {
-                                $.post("save.php", {
-                                    json: JSON.stringify(data[currentCourse])
-                                });
-                            }))
-                    ])
-            ])
-        // $("<tr></tr>")
-        //     .attr('id', 'scorecard-row')
-        //     .append($("<td></td>")
-        //         .attr('colspan', colspan + 2)
-        //         .html('Scorecard ID: ')
-        //         .append($("<span></span>")
-        //             .attr('id', 'scorecard-id')
-        //             .html(courseId(course.courseInfo) + "")))
+                              ' about the course or round'))
+            ]),
+        $("<tr></tr>")
+            .attr('id', 'scorecard-row')
+            .append($("<td></td>")
+                .attr('colspan', colspan + 2)
+                .html('Scorecard ID: &nbsp; ')
+                .append($("<span></span>")
+                    .attr('id', 'scorecard-id')
+                    .html(newScorecardID())))
     ]);
 }
 
@@ -710,6 +716,11 @@ function fetchDate() {
 
 function setDate() {
     $("#date").html(fetchDate());
+}
+
+function randomIntFromInterval(min, max) {
+    // Generate a random integer in the range [min, max].
+    return Math.floor(Math.random()*(max-min+1)+min);
 }
 
 function newScorecardID() {

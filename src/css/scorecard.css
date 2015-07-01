@@ -125,11 +125,12 @@ noscript {
 }
 
 #scorecard-row {
-    background-color: #CCC;
+    background-color: #CCFFFF;
+    text-align: left;
 }
 
 #scorecard-id {
-    font-size: small;
+    font-size: medium;
     font-style: normal;
 }
 
@@ -143,4 +144,11 @@ noscript {
     margin-top: 1em;
     font-size: smaller;
     font-style: italic;
+}
+
+#buttons_row {
+    background-color: #CCFFFF;
+    text-align: center;
+    width: 100px;
+    vertical-align: middle;
 }
