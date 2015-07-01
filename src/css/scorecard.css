@@ -71,8 +71,8 @@ noscript {
 
 .player-name {
     border: none;
-    padding-left: 4;
-    padding-right: 4;
+    padding-left: 4px;
+    padding-right: 4px;
     width: 12em;
 }
 
