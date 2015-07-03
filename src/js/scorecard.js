@@ -6,27 +6,6 @@
  * Copyright (c) 2014-2015 Jim & Joel Kottas.  All rights reserved.
  */
 
-/* Trims whitespace from the left side of a string. */
-function triml(str) {
-    return str.replace(/^\s+/, '');
-}
-
-/* Trims whitespace from the right side of a string. */
-function trimr(str) {
-    return str.replace(/\s+$/, '');
-}
-
-/* Replaces any occurrences of multiple whitespace characters in a row with a
- * single space. */
-function trimm(str) {
-    return str.replace(/\s+/g, ' ');
-}
-
-/* Does all of trimm, triml, trimr. */
-function trim(str) {
-    return trimm(triml(trimr(str)));
-}
-
 // Using an anonymous function to avoid polluting the global scope.
 (function() {
 // "use strict" tells the browser to generate more errors than normal. This
@@ -100,6 +79,27 @@ var EMPTY_SCORE = {};
  *     }
  * }
  */
+
+/* Trims whitespace from the left side of a string. */
+function triml(str) {
+    return str.replace(/^\s+/, '');
+}
+
+/* Trims whitespace from the right side of a string. */
+function trimr(str) {
+    return str.replace(/\s+$/, '');
+}
+
+/* Replaces any occurrences of multiple whitespace characters in a row with a
+ * single space. */
+function trimm(str) {
+    return str.replace(/\s+/g, ' ');
+}
+
+/* Does all of trimm, triml, trimr. */
+function trim(str) {
+    return trimm(triml(trimr(str)));
+}
 
 function sum(arr) {
     var total = 0,
