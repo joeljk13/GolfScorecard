@@ -13,9 +13,6 @@ var defCourse = 0;
 // define dynamically.
 var otherCourse = -1;
 
-// The 0-based index of the course that the user selected
-var currentCourse = defCourse;
-
 // Define pre-defined courses; the default one will be set once the DOM has 
 // loaded.
 

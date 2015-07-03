@@ -33,63 +33,72 @@ function trim(str) {
 // only applies to this function.
 "use strict";
 
-var data = [];
+var data = {
+    courses: [],
+    scorecard: {
+        players: [],
+        scores: {},
+        notes: ""
+    }
+};
+
+var EMPTY_SCORE = {};
 
 /*
  * Example JSON data:
- *  [
- *      {
- *          "courseInfo": {
- *              "name": "The Hill",
- *              "city": "Devens",
- *              "state": "MA",
- *              "pars": {
- *                  "out": [3, 3, 3, ...],
- *                  "in": [3, 3, 3, ...]
- *              },
- *              "notes": "Great course!"
- *          },
- *          "scorecard": {
- *              "players": [
- *                  "Dave",
- *                  "Jack",
- *                  ...
- *              ],
- *              "scores": {
- *                  "Dave": {
- *                      "out": [
- *                          {
- *                              "number": 3
- *                          },
- *                          ...
- *                      ],
- *                      "in": [
- *                          {
- *                              "number": 3
- *                          },
- *                          ...
- *                      ]
- *                  },
- *                  "Jack" : {
- *                      "out": [
- *                          {
- *                              "number": 3
- *                          },
- *                          ...
- *                      ],
- *                      "in": [
- *                          {
- *                              "number": 3
- *                          },
- *                          ...
- *                      ]
- *                  },
- *                  ...
- *              },
- *              "notes": "Great day, lots of sun!",
- *          }
- *      }
- *  ]
+ * {
+ *     "courses": [
+ *         ...
+ *     ],
+ *     "scorecard": {
+ *         "course": {
+ *             "name": "The Hill",
+ *             "city": "Devens",
+ *             "state": "MA",
+ *             "pars": {
+ *                 "out": [3, 3, 3, ...],
+ *                 "in": [3, 3, 3, ...]
+ *             }
+ *         },
+ *         "players": [
+ *             "Dave",
+ *             "Jack",
+ *             ...
+ *         ],
+ *         "scores": {
+ *             "Dave": {
+ *                 "out": [
+ *                     {
+ *                         "number": 3
+ *                     },
+ *                     ...
+ *                 ],
+ *                 "in": [
+ *                     {
+ *                         "number": 3
+ *                     },
+ *                     ...
+ *                 ]
+ *             },
+ *             "Jack" : {
+ *                 "out": [
+ *                     {
+ *                         "number": 3
+ *                     },
+ *                     ...
+ *                 ],
+ *                 "in": [
+ *                     {
+ *                         "number": 3
+ *                     },
+ *                     ...
+ *                 ]
+ *             },
+ *             ...
+ *         },
+ *         "notes": "Great day, lots of sun!",
+ *     }
+ * }
  */
 
 function sum(arr) {
@@ -122,10 +131,13 @@ function courseStr(course) {
 }
 
 function scoreHTML(score) {
-    var number = "", sym = "";
+    var number = "",
+        sym    = "";
+
     if (score.number || score.number === 0) {
         number += score.number;
     }
+
     for (var i in score) {
         if (i === 'number') {
             continue;
@@ -134,6 +146,7 @@ function scoreHTML(score) {
             sym += i;
         }
     }
+
     if (number === "" && sym === "") {
         return "&nbsp;"
     }
@@ -203,25 +216,25 @@ function addScores(a, b) {
     return score;
 }
 
-function outLabelsHTML(course) {
+function outLabelsHTML(scorecard) {
     var i = 1;
-    return course.courseInfo.pars.out.reduce(function(a, b) {
+    return scorecard.course.pars.out.reduce(function(a, b) {
         return a.add($("<td></td>").html(i++ + ""));
     }, $()).add($("<td></td>").html("Out"));
 }
 
-function inLabelsHTML(course) {
-    var i = course.courseInfo.pars.out.length + 1;
-    return course.courseInfo.pars.in.reduce(function(a, b) {
+function inLabelsHTML(scorecard) {
+    var i = scorecard.course.pars.out.length + 1;
+    return scorecard.course.pars.in.reduce(function(a, b) {
         return a.add($("<td></td>").html(i++ + ""));
     }, $()).add($("<td></td>").html("In"));
 }
 
-function labelsHTML(course) {
+function labelsHTML(scorecard) {
     var $html = $("<td></td>").html("Hole #");
-    $html = $html.add(outLabelsHTML(course));
-    if ("in" in course.courseInfo.pars) {
-        $html = $html.add(inLabelsHTML(course));
+    $html = $html.add(outLabelsHTML(scorecard));
+    if ("in" in scorecard.course.pars) {
+        $html = $html.add(inLabelsHTML(scorecard));
     }
     return $html.add($("<td></td>").html("Total"));
 }
@@ -289,9 +302,9 @@ function parInput(par, updater) {
     });
 }
 
-function outParsHTML(course, updater) {
-    var outPars = course.courseInfo.pars.out;
-    var total = $("<td></td>").addClass('par-sum');
+function outParsHTML(scorecard, updater) {
+    var outPars = scorecard.course.pars.out,
+        total   = $("<td></td>").addClass('par-sum');
 
     function outUpdater() {
         total.html(sum(outPars) + "");
@@ -315,9 +328,9 @@ function outParsHTML(course, updater) {
     return $pars.add(total);
 }
 
-function inParsHTML(course, updater) {
-    var inPars = course.courseInfo.pars.in;
-    var total = $("<td></td>").addClass('par-sum');
+function inParsHTML(scorecard, updater) {
+    var inPars = scorecard.course.pars.in,
+        total  = $("<td></td>").addClass('par-sum');
 
     function inUpdater() {
         total.html(sum(inPars) + "");
@@ -341,10 +354,10 @@ function inParsHTML(course, updater) {
     return $pars.add(total);
 }
 
-function parsHTML(course) {
-    var pars = course.courseInfo.pars;
-    var $pars = $("<td></td>").html("Par");
-    var total = $("<td></td>").addClass('par-sum');
+function parsHTML(scorecard) {
+    var pars  = scorecard.course.pars,
+        $pars = $("<td></td>").html("Par"),
+        total = $("<td></td>").addClass('par-sum');
 
     if ("in" in pars) {
         var updater = function() {
@@ -356,9 +369,9 @@ function parsHTML(course) {
         }
     }
 
-    $pars = $pars.add(outParsHTML(course, updater));
+    $pars = $pars.add(outParsHTML(scorecard, updater));
     if ("in" in pars) {
-        $pars = $pars.add(inParsHTML(course, updater));
+        $pars = $pars.add(inParsHTML(scorecard, updater));
     }
     return $pars.add(total);
 }
@@ -367,12 +380,17 @@ function playerPlaceholder(playerNumber) {
     return 'Player ' + playerNumber;
 }
 
+function playerStr(scorecard, playerNumber) {
+    return scorecard.players[playerNumber - 1]
+        || playerPlaceholder(playerNumber);
+}
+
 function playerNameHTML(scorecard, playerNumber) {
     var placeholder = playerPlaceholder(playerNumber);
 
     function update() {
-        var prevName = scorecard.players[playerNumber - 1] || placeholder;
-        var newName = $input.val() || placeholder;
+        var prevName = playerStr(scorecard, playerNumber),
+            newName  = $input.val() || placeholder;
 
         if (prevName === newName) {
             return;
@@ -412,78 +430,76 @@ function scoreInput(score, updater) {
 }
 
 function outScoresHTML(scorecard, playerNumber, updater) {
-    var player = scorecard.players[playerNumber - 1] ||
-        playerPlaceholder(playerNumber);
-    var scores = scorecard.scores[player].out;
-    var total = $("<td></td>").addClass('score-sum');
+    var player    = playerStr(scorecard, playerNumber),
+        outScores = scorecard.scores[player].out,
+        total     = $("<td></td>").addClass('score-sum');
 
     function outUpdater() {
-        var s = scores.reduce(addScores, {number: 0});
+        var s = outScores.reduce(addScores, EMPTY_SCORE);
         total.html(scoreHTML(s));
         updater();
     }
 
     function getUpdater(s) {
         return function(i) {
-            scores[s] = i;
+            outScores[s] = i;
             outUpdater();
         }
     }
 
     var $scores = $();
-    for (var s = 0; s < scores.length; ++s) {
+    for (var s = 0; s < outScores.length; ++s) {
         var td = $("<td></td>")
             .addClass('score')
-            .append(scoreInput(scores[s], getUpdater(s)));
+            .append(scoreInput(outScores[s], getUpdater(s)));
         $scores = $scores.add(td);
     }
     return $scores.add(total);
 }
 
 function inScoresHTML(scorecard, playerNumber, updater) {
-    var player = scorecard.players[playerNumber - 1] ||
-        playerPlaceholder(playerNumber);
-    var scores = scorecard.scores[player].in;
-    var total = $("<td></td>").addClass('score-sum');
+    var player   = playerStr(scorecard, playerNumber),
+        inScores = scorecard.scores[player].in,
+        total    = $("<td></td>").addClass('score-sum');
 
     function inUpdater() {
-        var s = scores.reduce(addScores, {number: 0});
+        var s = inScores.reduce(addScores, EMPTY_SCORE);
         total.html(scoreHTML(s));
         updater();
     }
 
     function getUpdater(s) {
         return function(i) {
-            scores[s] = i;
+            inScores[s] = i;
             inUpdater();
         }
     }
 
     var $scores = $();
-    for (var s = 0; s < scores.length; ++s) {
+    for (var s = 0; s < inScores.length; ++s) {
         var td = $("<td></td>")
             .addClass('score')
-            .append(scoreInput(scores[s], getUpdater(s)));
+            .append(scoreInput(inScores[s], getUpdater(s)));
         $scores = $scores.add(td);
     }
     return $scores.add(total);
 }
 
 function scoresHTML(scorecard, playerNumber) {
-    var total = $("<td></td>").addClass('score-sum');
-    var player = scorecard.players[playerNumber - 1] ||
-        playerPlaceholder(playerNumber);
-    var scores = scorecard.scores;
+    var total   = $("<td></td>").addClass('score-sum'),
+        player  = playerStr(scorecard, playerNumber),
+        players = scorecard.players,
+        scores  = scorecard.scores;
 
     function updater() {
-        var player = scorecard.players[playerNumber - 1] ||
-            playerPlaceholder(playerNumber);
+        var player       = playerStr(scorecard, playerNumber),
+            playerScores = scores[player],
+            outScores    = playerScores.out.reduce(addScores, EMPTY_SCORE);
 
-        var outScores = scores[player].out.reduce(addScores, {number: 0});
         if ("in" in scores[player]) {
-            var inScores = scores[player].in.reduce(addScores, {number: 0});
+            var inScores = playerScores.in.reduce(addScores, EMPTY_SCORE);
         }
-        total.html(scoreHTML(addScores(outScores, inScores || {number: 0})));
+        total.html(scoreHTML(addScores(outScores, inScores || EMPTY_SCORE)));
     }
 
     var $html = outScoresHTML(scorecard, playerNumber, updater);
@@ -502,27 +518,26 @@ function playerHTML(scorecard, playerNumber) {
     return $html;
 }
 
-function tableHeaderHTML(course) {
+function tableHeaderHTML(scorecard) {
     return $("<thead></thead>")
         .append($("<tr></tr>")
             .attr('id', 'labels-row')
-            .append(labelsHTML(course)))
+            .append(labelsHTML(scorecard)))
         .append($("<tr></tr>")
             .attr('id', 'par-row')
-            .append(parsHTML(course)));
+            .append(parsHTML(scorecard)));
 }
 
-function tableBodyHTML(course) {
+function tableBodyHTML(scorecard) {
     var $html = $("<tbody>");
-    for (var p = 1; p <= course.scorecard.players.length; ++p) {
-        $html.append(playerHTML(course.scorecard, p));
+    for (var p = 1; p <= scorecard.players.length; ++p) {
+        $html.append(playerHTML(scorecard, p));
     }
     return $html;
 }
 
-function tableFooterHTML(course) {
-    // 2 == Player names + Out total + Total
-    var pars = course.courseInfo.pars;
+function tableFooterHTML(scorecard) {
+    var pars = scorecard.course.pars;
     var colspan = pars.out.length + 3;
     if ("in" in pars) {
         colspan += pars.in.length + 1;
@@ -539,7 +554,8 @@ function tableFooterHTML(course) {
                         .attr('type', 'button')
                         .text('Add Player')
                         .click(function() {
-                            addPlayer();
+                            addPlayer(scorecard);
+                            updateScorecard();
                         })),
                 $("<td></td>")
                     .attr('colspan', colspan + 2)
@@ -547,11 +563,7 @@ function tableFooterHTML(course) {
                         .attr('type', 'button')
                         .attr('id', 'save-button')
                         .text('Save')
-                        .click(function() {
-                            $.post("save.php", {
-                                json: JSON.stringify(data[currentCourse])
-                            });
-                        }))
+                        .click(save))
             ]),
         $("<tr></tr>")
             .append([
@@ -565,9 +577,9 @@ function tableFooterHTML(course) {
                     .attr('colspan', colspan + 1)
                     .append($("<textarea></textarea>")
                         .attr('id', 'course-notes-input')
-                        .val(course.scorecard.notes)
+                        .val(scorecard.course.notes)
                         .blur(function() {
-                            course.scorecard.notes = $(this).val();
+                            scorecard.notes = $(this).val();
                         })
                         .attr('rows', '2')
                         .attr('cols', '72')
@@ -585,102 +597,103 @@ function tableFooterHTML(course) {
     ]);
 }
 
-function tableHTML(course) {
+function tableHTML(scorecard) {
     var $html = $("<table></table>")
         .attr('id', 'scorecard')
-        .append(tableHeaderHTML(course))
-        .append(tableFooterHTML(course))
-        .append(tableBodyHTML(course));
+        .append(tableHeaderHTML(scorecard))
+        .append(tableFooterHTML(scorecard))
+        .append(tableBodyHTML(scorecard));
     return $html;
+}
+
+function save() {
+    $.post("save.php", {
+        json: JSON.stringify(data.scorecard)
+    });
 }
 
 function getUserInput(p) {
     return prompt(p, "");
 }
 
-function setCourse(courseNumber) {
-    if (courseNumber === otherCourse) {
-        var name = getUserInput("Please enter the name of this course.");
-        if (name === null) {
-            return;
-        }
-        var city = getUserInput("Please enter the city of this course.");
-        if (city === null) {
-            return;
-        }
-        var state = getUserInput("Please enter the state of this course.");
-        if (state === null) {
-            return;
-        }
-        var newCourse = {
-            name: name,
-            city: city,
-            state: state,
-            pars: {
-                out: [3, 3, 3, 3, 3, 3, 3, 3, 3],
-                in: [3, 3, 3, 3, 3, 3, 3, 3, 3]
-            }
-        };
-        setCourse(addCourse(newCourse));
-    } else {
-        $("#scorecard").replaceWith(tableHTML(data[courseNumber]));
-        currentCourse = courseNumber;
+function getNewCourse() {
+    var name = getUserInput("Please enter the name of this course.");
+    if (name === null) {
+        return null;
     }
+    var city = getUserInput("Please enter the city of this course.");
+    if (city === null) {
+        return null;
+    }
+    var state = getUserInput("Please enter the state of this course.");
+    if (state === null) {
+        return null;
+    }
+
+    var newCourse = {
+        name: name,
+        city: city,
+        state: state,
+        pars: {
+            out: [3, 3, 3, 3, 3, 3, 3, 3, 3],
+            in: [3, 3, 3, 3, 3, 3, 3, 3, 3]
+        }
+    };
+    return newCourse;
 }
 
-function addPlayer(course) {
-    course = course || data[currentCourse];
-    var scorecard = course.scorecard;
-    var playerNumber = scorecard.players.length + 1;
-    var placeholder = playerPlaceholder(playerNumber);
+function setCourse(scorecard, course) {
+    if (course === otherCourse) {
+        var newCourse = getNewCourse();
+        if (!newCourse) {
+            return;
+        }
+    } else {
+        var newCourse = course;
+    }
+    scorecard.course = newCourse;
+}
+
+function addPlayer(scorecard) {
+    var playerNumber = scorecard.players.length + 1,
+        placeholder  = playerPlaceholder(playerNumber),
+        course       = scorecard.course,
+        pars         = course.pars,
+        scores       = scorecard.scores;
+
     scorecard.players.push("");
 
-    function getEmptyScore(par) {
-        return {};
+    function getEmptyScore() {
+        return EMPTY_SCORE;
     }
 
-    scorecard.scores[placeholder] = {
-        out: course.courseInfo.pars.out.map(getEmptyScore)
+    scores[placeholder] = {
+        out: pars.out.map(getEmptyScore)
     };
-    if ("in" in course.courseInfo.pars) {
-        scorecard.scores[placeholder].in =
-            course.courseInfo.pars.in.map(getEmptyScore);
-    }
-
-    if (course === data[currentCourse]) {
-        setCourse(currentCourse);
+    if ("in" in pars) {
+        scores[placeholder].in = pars.in.map(getEmptyScore);
     }
 }
 
-function addCourse(info) {
-    var course = {
-        courseInfo: info,
-        scorecard: {
-            players: [],
-            scores: {}
-        }
-    };
-
-    addPlayer(course);
-
+function addCourse(course) {
+    data.courses.push(course);
     $("#select-course")
         .prepend($("<option></option>")
-            .attr('id', courseId(course))
+            .attr('value', courseId(course))
             .html(courseStr(course)));
-
-    data.push(course);
-    return data.length - 1;
+    return course;
 }
 
 /* Creates the course selection dropdown and label. */
 function createSelect() {
     var options = [];
+    var courses = data.courses;
 
-    for (var i = 0; i < data.length; ++i) {
-        var course = data[i];
+    for (var i = 0; i < courses.length; ++i) {
+        var course = courses[i];
         var option = $("<option></option>")
-            .attr('id', courseId(course.courseInfo))
-            .html(courseStr(course.courseInfo));
+            .attr('value', courseId(course))
+            .html(courseStr(course));
         if (i === defCourse) {
             option.prop('selected', true);
         }
@@ -697,16 +710,21 @@ function createSelect() {
             .attr('title', 'Click to select a predefined course')
             .change(function() {
                 var str = $(this).val();
-                for (var i = 0; i < data.length; ++i) {
-                    var course = data[i];
-                    if (courseStr(course.courseInfo) === str) {
-                        setCourse(i);
+                for (var i = 0; i < courses.length; ++i) {
+                    var course = courses[i];
+                    if (courseId(course) === str) {
+                        setCourse(data.scorecard, course);
+                        updateScorecard();
                         return;
                     }
                 }
             })
             .append(options)
     ]);
+}
+
+function updateScorecard() {
+    $("#scorecard").replaceWith(tableHTML(data.scorecard));
 }
 
 function fetchDate() {
@@ -745,7 +763,9 @@ $(function() {
 
     setDate();
     createSelect();
-    setCourse(defCourse);
+    setCourse(data.scorecard, data.courses[defCourse]);
+    addPlayer(data.scorecard);
+    updateScorecard();
 });
 
 window.addCourse = function(info) {
