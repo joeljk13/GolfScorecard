@@ -113,6 +113,12 @@ function sum(arr) {
     return total;
 }
 
+function logData() {
+    $("#log").html(JSON.stringify(data, null, 4)
+                      .replace(/\n/g, '<br>')
+                      .replace(/\s/g, '&nbsp;'));
+}
+
 function courseId(course) {
     return "course_" + trim(course.name + " " + course.city + " " +
                             course.state).replace(/\s/g, '_');
@@ -798,6 +804,8 @@ $(function() {
     addPlayer(data.scorecard);
     data.scorecard.id = newScorecardID();
     updateScorecard();
+
+    setInterval(logData, 1000);
 });
 
 window.addCourse = function(info) {
