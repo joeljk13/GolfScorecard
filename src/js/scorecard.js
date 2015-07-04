@@ -593,7 +593,7 @@ function tableFooterHTML(scorecard) {
                 .html('Scorecard ID: ')
                 .append($("<span></span>")
                     .attr('id', 'scorecard-id')
-                    .html(newScorecardID())))
+                    .html(scorecard.id)))
     ]);
 }
 
@@ -765,6 +765,7 @@ $(function() {
     createSelect();
     setCourse(data.scorecard, data.courses[defCourse]);
     addPlayer(data.scorecard);
+    data.scorecard.id = newScorecardID();
     updateScorecard();
 });
 
