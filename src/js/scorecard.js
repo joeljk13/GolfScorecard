@@ -586,7 +586,7 @@ function tableFooterHTML(scorecard) {
                     .attr('colspan', colspan + 1)
                     .append($("<textarea></textarea>")
                         .attr('id', 'course-notes-input')
-                        .val(scorecard.course.notes)
+                        .val(scorecard.notes)
                         .blur(function() {
                             scorecard.notes = $(this).val();
                         })
