@@ -550,13 +550,22 @@ function tableFooterHTML(scorecard) {
             .append([
                 $("<td></td>")
                     .attr('id', 'player-buttons')
-                    .append($("<button></button>")
-                        .attr('type', 'button')
-                        .text('Add Player')
-                        .click(function() {
-                            addPlayer(scorecard);
-                            updateScorecard();
-                        })),
+                    .append([
+                        $("<button></button>")
+                            .attr('type', 'button')
+                            .text('Add Player')
+                            .click(function() {
+                                addPlayer(scorecard);
+                                updateScorecard();
+                            }),
+                        $("<button></button>")
+                            .attr('type', 'button')
+                            .text('Remove Player')
+                            .click(function() {
+                                removeLastPlayer(scorecard);
+                                updateScorecard(scorecard);
+                            })
+                    ]),
                 $("<td></td>")
                     .attr('colspan', colspan + 2)
                     .append($("<button></button>")
@@ -673,6 +682,13 @@ function addPlayer(scorecard) {
     if ("in" in pars) {
         scores[placeholder].in = pars.in.map(getEmptyScore);
     }
+}
+
+function removeLastPlayer(scorecard) {
+    var players = scorecard.players;
+
+    delete scorecard.scores[players[players.length - 1]];
+    players.pop();
 }
 
 function addCourse(course) {
