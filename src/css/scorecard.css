@@ -69,9 +69,7 @@ noscript {
 
 .player-name-input {
     border: none;
-    padding-left: 4px;
-    padding-right: 4px;
-    width: 12em;
+    width: 96%;
 }
 
 .score {
