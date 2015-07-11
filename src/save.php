@@ -1,9 +1,16 @@
 <?php
 
 function is_valid_scorecard_id($id) {
-    if ($id === "" || preg_match('/\W/', $id) === 1) {
+    if (!$id || preg_match('/\W/', $id) !== 0) {
         return false;
     }
+
+    // These checks probably aren't necessary, but they shouldn't hurt, and
+    // help check that the scorecards stay in the right directory.
+    if (strstr($id, ".") !== false || strstr($id, "/") !== false) {
+        return false;
+    }
+
     return true;
 }
 
