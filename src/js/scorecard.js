@@ -263,18 +263,16 @@ function generalInput(initData, updater) {
         $div.html(newData.html);
     }
 
-    function finalize() {
-        $input.hide();
-        setData();
-        $div.show();
-    }
-
     $input.blur(function() {
         // Since $input blurs before the click event of a $div fires, hiding
         // this input can mess up clicks on score td's that have been moved by
         // this input. 100 ms should be short enough that it's practically
         // immediately, but long enough to get a click to register.
-        setTimeout(finalize, 100);
+        setData();
+        setTimeout(function() {
+            $input.hide();
+            $div.show();
+        }, 100);
     });
 
     $input.keypress(function(e) {
