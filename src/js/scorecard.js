@@ -683,9 +683,10 @@ function addPlayer(scorecard) {
 }
 
 function removeLastPlayer(scorecard) {
-    var players = scorecard.players;
+    var players = scorecard.players,
+        str     = playerStr(scorecard, players.length);
 
-    delete scorecard.scores[players[players.length - 1]];
+    delete scorecard.scores[str];
     players.pop();
 }
 
