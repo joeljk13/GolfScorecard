@@ -570,7 +570,16 @@ function tableFooterHTML(scorecard) {
                         .attr('type', 'button')
                         .attr('id', 'save-button')
                         .text('Save')
-                        .click(save))
+                        .click(function() {
+                            save({
+                                success: function() {
+                                    // Do nothing for now
+                                },
+                                error: function() {
+                                    alert("Error: unable to save.");
+                                }
+                            });
+                        }))
             ]),
         $("<tr></tr>")
             .append([
@@ -613,9 +622,15 @@ function tableHTML(scorecard) {
     return $html;
 }
 
-function save() {
-    $.post("save.php", {
-        json: JSON.stringify(data.scorecard)
+function save(callbacks) {
+    $.ajax({
+        method: "POST",
+        url: "save.php",
+        data: {
+            json: JSON.stringify(data.scorecard)
+        },
+        success: callbacks.success,
+        error: callbacks.error
     });
 }
 
