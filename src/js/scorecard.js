@@ -783,14 +783,15 @@ function newScorecardID() {
     if (MMM < 10) { MMM = "00" + MMM; }
     else if (MMM < 100) { MMM = "0" + MMM; }
     var randValue = randomIntFromInterval(100000, 999999);
-    var newID = yyyy + mm + dd + "_" + HH + MM + SS + MMM + "_" + randValue;
+    // The concatenation with blank strings below ensures that string concatenation
+    // will be done instead of mathematical addition.
+    var newID = "" + yyyy + "" + mm + "" + dd + "_" + HH + "" + MM + "" + SS + "" + MMM + "_" + randValue;
     return newID;
 }
 
 $(function() {
     // After the page has been loaded, run these javascript commands to set up
     // any part of the page that needs to be created dynamically.
-
     setDate();
     createSelect();
     setCourse(data.scorecard, data.courses[defCourse]);
