@@ -3,7 +3,7 @@
  * JavaScript for defining golf courses for the GolfScorecard web site.
  * This file must be included after the scorecard.js file.
  *
- * Copyright (c) 2015 Jim & Joel Kottas.  All rights reserved.
+ * Copyright (c) 2015-2019 Jim & Joel Kottas.  All rights reserved.
  */
 
 // The 0-based index for the default course to show in a new scorecard
@@ -154,8 +154,7 @@ addCourse({
     zip: "01803",
     dg_url: "http://www.dgcoursereview.com/course.php?id=3241",
     pars: {
-        out: [3, 3, 3, 3, 3, 3, 3, 4, 3],
-        in: []
+        out: [3, 3, 3, 3, 3, 3, 3, 4, 3]
     }
 });
 
